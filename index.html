@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Word Forest: Magic Letter Catcher</title>
+    <title>Word Wizard's Bouncing Cauldron</title>
     <style>
         * {
             box-sizing: border-box;
@@ -15,9 +15,9 @@
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(to bottom, #1e1b4b, #312e81, #1e1b4b);
+            background: #0f172a;
             color: #ffffff;
-            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -32,13 +32,14 @@
             max-width: 480px;
             height: 100%;
             max-height: 750px;
-            background: linear-gradient(to bottom, #38bdf8 0%, #bae6fd 60%, #4ade80 60%, #15803d 100%);
+            background: linear-gradient(to bottom, #311042, #1e1b4b, #0f172a);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            border: 4px solid #a855f7;
         }
 
         /* Top Header UI */
@@ -47,20 +48,21 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(168, 85, 247, 0.2);
             backdrop-filter: blur(5px);
-            border-bottom: 3px dashed rgba(255, 255, 255, 0.6);
+            border-bottom: 2px dashed rgba(168, 85, 247, 0.4);
             z-index: 10;
         }
 
         .hud-box {
-            background: #ffffff;
-            color: #1e293b;
+            background: #3b0764;
+            color: #f3e8ff;
             padding: 6px 14px;
             border-radius: 15px;
             font-size: 1.1rem;
             font-weight: bold;
-            box-shadow: 0 4px 0 #cbd5e1;
+            border: 2px solid #c084fc;
+            box-shadow: 0 4px 0 #581c87;
         }
 
         /* Word Target Banner */
@@ -68,120 +70,122 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 10px;
+            padding: 15px;
             z-index: 10;
         }
 
         .hint-text {
-            font-size: 0.95rem;
-            color: #14532d;
+            font-size: 1rem;
+            color: #e9d5ff;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 4px 12px;
-            border-radius: 10px;
-            margin-bottom: 6px;
+            background: rgba(88, 28, 135, 0.6);
+            padding: 6px 16px;
+            border-radius: 12px;
+            border: 1px solid #c084fc;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
         .word-display {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .letter-slot {
-            width: 45px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 3px solid #16a34a;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #cbd5e1;
-            box-shadow: inset 0 3px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .letter-slot.filled {
-            color: #16a34a;
-            border-color: #15803d;
-            background: #dcfce7;
-            transform: scale(1.1);
-        }
-
-        /* Play Area / Canvas */
-        #gameCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 5;
-        }
-
-        /* Floating Interactive Bubbles Layer */
-        #bubbles-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 8;
-            pointer-events: none;
-        }
-
-        .bubble {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 30% 30%, #ffffff, #60a5fa);
-            border-radius: 50%;
+            width: 50px;
+            height: 55px;
+            background: rgba(30, 27, 75, 0.8);
+            border: 3px solid #c084fc;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             font-weight: bold;
-            color: #1e3a8a;
-            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.2);
+            color: #6b21a8;
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .letter-slot.filled {
+            color: #4ade80;
+            border-color: #22c55e;
+            background: #052e16;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
+        }
+
+        /* Play Area / Interactive Physics Box */
+        #play-area {
+            position: relative;
+            flex-grow: 1;
+            overflow: hidden;
+            z-index: 5;
+        }
+
+        /* Bouncing Interactive Letter Orbs */
+        .orb {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            background: radial-gradient(circle at 30% 30%, #e879f9, #7e22ce);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #ffffff;
+            box-shadow: inset -5px -5px 12px rgba(0,0,0,0.4), 0 8px 20px rgba(168,85,247,0.5);
             cursor: pointer;
-            pointer-events: auto;
+            user-select: none;
+            border: 2px solid #f0abfc;
             transform: translate(-50%, -50%);
-            animation: floatUp 4s linear infinite;
             transition: transform 0.1s;
         }
 
-        .bubble:active {
-            transform: translate(-50%, -50%) scale(0.8);
+        .orb:active {
+            transform: translate(-50%, -50%) scale(0.85);
         }
 
-        @keyframes floatUp {
-            0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translate(-50%, -550px) scale(1.1); opacity: 0; }
+        /* Magic Cauldron Graphic at the bottom */
+        .cauldron-base {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(to top, #18181b, #27272a);
+            border-top: 4px solid #a855f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #d8b4fe;
+            z-index: 8;
+            box-shadow: 0 -10px 20px rgba(0,0,0,0.5);
         }
 
-        /* Celebration overlay banner */
+        /* Success Popup Modal */
         #success-modal {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0);
-            background: #ffffff;
-            border: 6px solid #4ade80;
+            background: #1e1b4b;
+            border: 6px solid #c084fc;
             padding: 30px;
             border-radius: 25px;
             text-align: center;
             z-index: 20;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 85%;
+            max-width: 350px;
         }
 
         #success-modal.show {
@@ -189,13 +193,13 @@
         }
 
         #success-modal h2 {
-            color: #15803d;
+            color: #4ade80;
             margin: 0 0 10px 0;
-            font-size: 2rem;
+            font-size: 2.2rem;
         }
 
         .action-btn {
-            background: #16a34a;
+            background: #9333ea;
             color: white;
             border: none;
             padding: 12px 25px;
@@ -203,54 +207,51 @@
             font-weight: bold;
             border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 6px 0 #14532d;
+            box-shadow: 0 6px 0 #581c87;
             font-family: inherit;
             margin-top: 15px;
             transition: 0.1s;
+            border: 2px solid #c084fc;
         }
 
         .action-btn:active {
             transform: translateY(4px);
-            box-shadow: 0 2px 0 #14532d;
+            box-shadow: 0 2px 0 #581c87;
         }
     </style>
 </head>
 <body>
 
     <div id="game-wrapper">
-        <!-- Canvas for visual background depth (Sun rays, trees, twinkling particles) -->
-        <canvas id="gameCanvas"></canvas>
-
         <!-- UI Information panel -->
         <div class="hud">
-            <div class="hud-box">⭐ Stars: <span id="score">0</span></div>
+            <div class="hud-box">✨ Magic Points: <span id="score">0</span></div>
             <div class="hud-box" id="word-category">Animals</div>
         </div>
 
         <!-- Target word mapping interface -->
         <div class="target-section">
-            <div class="hint-text" id="hint-label">Find the letters for: CAT</div>
-            <div class="word-display" id="word-slots">
-                <!-- Dynamically populated letter slot elements -->
-            </div>
+            <div class="hint-text" id="hint-label">Brew the word: CAT</div>
+            <div class="word-display" id="word-slots"></div>
         </div>
 
-        <!-- Layer for interactive bubbles -->
-        <div id="bubbles-layer"></div>
+        <!-- Interactive Physics Play Area for Bouncing Letters -->
+        <div id="play-area"></div>
+
+        <!-- Cauldron Footer -->
+        <div class="cauldron-base">🔮 Tap the bouncing orbs in order! 🔮</div>
 
         <!-- Success Popup Modal -->
         <div id="success-modal">
-            <div style="font-size: 3.5rem; margin-bottom: 5px;" id="modal-emoji">🐱</div>
-            <h2 id="modal-title">Awesome!</h2>
-            <p id="modal-desc" style="color: #475569; font-size: 1.1rem; margin: 0;">You spelled CAT correctly!</p>
-            <button class="action-btn" onclick="nextWord()">NEXT WORD 🚀</button>
+            <div style="font-size: 4rem; margin-bottom: 5px;" id="modal-emoji">🐱</div>
+            <h2 id="modal-title">Spell Brewed!</h2>
+            <p id="modal-desc" style="color: #e9d5ff; font-size: 1.1rem; margin: 0;">You successfully brewed CAT!</p>
+            <button class="action-btn" onclick="nextWord()">NEXT SPELL 🚀</button>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const bubblesLayer = document.getElementById('bubbles-layer');
+        const playArea = document.getElementById('play-area');
         const wordSlotsEl = document.getElementById('word-slots');
         const hintLabel = document.getElementById('hint-label');
         const scoreEl = document.getElementById('score');
@@ -259,25 +260,23 @@
         const modalTitle = document.getElementById('modal-title');
         const modalDesc = document.getElementById('modal-desc');
 
-        // Word Database structured for kids learning
         const wordList = [
-            { word: "CAT", hint: "A furry pet that meows", emoji: "🐱", category: "Animals" },
             { word: "DOG", hint: "A friendly barking animal", emoji: "🐶", category: "Animals" },
-            { word: "SUN", hint: "Bright yellow star in the sky", emoji: "☀️", category: "Nature" },
+            { word: "CAT", hint: "A furry pet that meows", emoji: "🐱", category: "Animals" },
             { word: "STAR", hint: "Twinkles high up at night", emoji: "⭐", category: "Nature" },
-            { word: "BOOK", hint: "Something you read for stories", emoji: "📖", category: "School" },
-            { word: "TREE", hint: "Tall plant with green leaves", emoji: "🌳", category: "Nature" },
-            { word: "FISH", hint: "Swims around in the water", emoji: "🐠", category: "Animals" },
-            { word: "MOON", hint: "Shines bright in the dark night", emoji: "🌙", category: "Nature" }
+            { word: "MOON", hint: "Shines in the dark night sky", emoji: "🌙", category: "Nature" },
+            { word: "BOOK", hint: "Full of exciting stories", emoji: "📖", category: "School" },
+            { word: "FROG", hint: "Green hopper near the pond", emoji: "🐸", category: "Animals" },
+            { word: "TREE", hint: "Tall plant with green leaves", emoji: "🌳", category: "Nature" }
         ];
 
         let currentWordObj = null;
         let currentLetterIndex = 0;
         let score = 0;
-        let activeBubbles = [];
-        let particles = [];
+        let orbs = [];
+        let animationFrameId = null;
 
-        // Simple Audio Synthesizer (No external assets required, crystal clean sound)
+        // Sound synthesizer
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -287,72 +286,34 @@
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
 
-                if (type === 'pop') {
+                if (type === 'tap') {
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                    osc.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.exponentialRampYToValueAtTime ? osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1) : osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
                     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                     gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
                     osc.start();
                     osc.stop(audioCtx.currentTime + 0.1);
                 } else if (type === 'win') {
                     osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
-                    osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.2);
-                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.12);
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.24);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
                     osc.start();
-                    osc.stop(audioCtx.currentTime + 0.35);
+                    osc.stop(audioCtx.currentTime + 0.4);
                 } else if (type === 'error') {
                     osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(100, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(90, audioCtx.currentTime + 0.15);
                     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
                     osc.start();
-                    osc.stop(audioCtx.currentTime + 0.2);
+                    osc.stop(audioCtx.currentTime + 0.15);
                 }
             } catch(e) {}
         }
-
-        // Resize Canvas to fit parent wrapper accurately
-        function resizeCanvas() {
-            const rect = canvas.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        // Background visual particle generation (Fireflies / sparkles)
-        for (let i = 0; i < 20; i++) {
-            particles.push({
-                x: Math.random() * 480,
-                y: Math.random() * 750,
-                radius: Math.random() * 3 + 1,
-                speedY: (Math.random() * 0.5 + 0.2) * -1,
-                opacity: Math.random()
-            });
-        }
-
-        function drawBackground() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw glowing background ambient particles
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-            particles.forEach(p => {
-                p.y += p.speedY;
-                if (p.y < 0) p.y = canvas.height;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(Date.now() * 0.002 + p.x))})`;
-                ctx.fill();
-            });
-
-            requestAnimationFrame(drawBackground);
-        }
-        drawBackground();
 
         function loadNewWord() {
             successModal.classList.remove('show');
@@ -361,7 +322,6 @@
             
             hintLabel.innerText = `${currentWordObj.category}: ${currentWordObj.hint}`;
             
-            // Build letter slot elements
             wordSlotsEl.innerHTML = '';
             for (let i = 0; i < currentWordObj.word.length; i++) {
                 const slot = document.createElement('div');
@@ -370,85 +330,158 @@
                 wordSlotsEl.appendChild(slot);
             }
 
-            spawnBubbleBatch();
+            spawnOrbs();
         }
 
-        // Spawns bubbles containing the exact next letter + random distraction letters
-        function spawnBubbleBatch() {
-            bubblesLayer.innerHTML = '';
-            activeBubbles = [];
+        function spawnOrbs() {
+            playArea.innerHTML = '';
+            orbs = [];
 
             const targetChar = currentWordObj.word[currentLetterIndex];
             const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             
-            // Generate pool of letters (Ensure target letter is always present)
-            let lettersToSpawn = [targetChar];
-            while(lettersToSpawn.length < 4) {
-                let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
-                if(!lettersToSpawn.includes(randomChar)) {
-                    lettersToSpawn.push(randomChar);
-                }
+            let letters = [targetChar];
+            while(letters.length < 4) {
+                let randChar = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if(!letters.includes(randChar)) letters.push(randChar);
             }
+            letters.sort(() => Math.random() - 0.5);
 
-            // Shuffle bubble layout positions horizontally
-            lettersToSpawn.sort(() => Math.random() - 0.5);
+            const rect = playArea.getBoundingClientRect();
+            const width = rect.width || 400;
+            const height = rect.height || 350;
 
-            lettersToSpawn.forEach((char, index) => {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-                bubble.innerText = char;
-                
-                // Position spread across screen width safely
-                const posX = 70 + (index * 100) + (Math.random() * 20 - 10);
-                const posY = 520 + (Math.random() * 40);
-                
-                bubble.style.left = posX + 'px';
-                bubble.style.top = posY + 'px';
-                bubble.style.animationDuration = (3.5 + Math.random() * 1.5) + 's';
+            letters.forEach((char) => {
+                const el = document.createElement('div');
+                el.className = 'orb';
+                el.innerText = char;
 
-                bubble.onclick = () => handleLetterTap(char, bubble);
-                bubblesLayer.appendChild(bubble);
+                let orbData = {
+                    element: el,
+                    char: char,
+                    x: Math.random() * (width - 100) + 50,
+                    y: Math.random() * (height - 150) + 50,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    radius: 325
+                };
+
+                el.onclick = () => handleOrbTap(orbData);
+                playArea.appendChild(el);
+                orbs.push(orbData);
             });
+
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+            physicsLoop();
         }
 
-        function handleLetterTap(char, bubbleElement) {
+        // Real-time bouncing physics engine loop for maximum interactivity
+        function physicsLoop() {
+            const rect = playArea.getBoundingClientRect();
+            const width = rect.width || 400;
+            const height = rect.height || 350;
+
+            orbs.forEach(orb => {
+                orb.x += orb.vx;
+                orb.y += orb.vy;
+
+                // Wall boundary checks with bounce
+                if (orb.x < 35 || orb.x > width - 35) {
+                    orb.vx *= -1;
+                    orb.x = Math.max(35, Math.min(width - 35, orb.x));
+                }
+                if (orb.y < 35 || orb.y > height - 60) {
+                    orb.vy *= -1;
+                    orb.y = Math.max(35, Math.min(height - 60, orb.y));
+                }
+
+                orb.element.style.left = orb.x + 'px';
+                orb.element.style.top = orb.y + 'px';
+            });
+
+            animationFrameId = requestAnimationFrame(physicsLoop);
+        }
+
+        function handleOrbTap(orbData) {
             const expectedChar = currentWordObj.word[currentLetterIndex];
 
-            if (char === expectedChar) {
-                // Correct Letter!
-                playSound('pop');
-                bubbleElement.remove();
+            if (orbData.char === expectedChar) {
+                playSound('tap');
+                
+                // Remove tapped orb from physics array and DOM
+                orbs = orbs.filter(o => o !== orbData);
+                orbData.element.remove();
 
                 const slots = wordSlotsEl.children;
-                slots[currentLetterIndex].innerText = char;
+                slots[currentLetterIndex].innerText = orbData.char;
                 slots[currentLetterIndex].classList.add('filled');
 
                 currentLetterIndex++;
 
                 if (currentLetterIndex >= currentWordObj.word.length) {
-                    // Word Completed Successfully!
-                    score += 10;
+                    cancelAnimationFrame(animationFrameId);
+                    score += 15;
                     scoreEl.innerText = score;
                     playSound('win');
                     showSuccessPopup();
                 } else {
-                    // Spawn next batch of letters for the next character
-                    spawnBubbleBatch();
+                    // Respawn remaining/new bouncing letters dynamically
+                    spawnRemainingOrbs();
                 }
             } else {
-                // Wrong Letter tapped
                 playSound('error');
-                bubbleElement.style.transform = 'translate(-50%, -50%) scale(0.6)';
+                orbData.element.style.transform = 'translate(-50%, -50%) scale(0.7)';
                 setTimeout(() => {
-                    bubbleElement.style.transform = 'translate(-50%, -50%) scale(1)';
+                    orbData.element.style.transform = 'translate(-50%, -50%) scale(1)';
                 }, 150);
             }
         }
 
+        function spawnRemainingOrbs() {
+            const targetChar = currentWordObj.word[currentLetterIndex];
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            
+            let letters = [targetChar];
+            while(letters.length < 3) {
+                let randChar = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if(!letters.includes(randChar) && !currentWordObj.word.includes(randChar)) {
+                    letters.push(randChar);
+                }
+            }
+            letters.sort(() => Math.random() - 0.5);
+
+            // Clear old orbs and spawn new batch for the next letter
+            playArea.innerHTML = '';
+            orbs = [];
+
+            const rect = playArea.getBoundingClientRect();
+            const width = rect.width || 400;
+            const height = rect.height || 350;
+
+            letters.forEach((char) => {
+                const el = document.createElement('div');
+                el.className = 'orb';
+                el.innerText = char;
+
+                let orbData = {
+                    element: el,
+                    char: char,
+                    x: Math.random() * (width - 100) + 50,
+                    y: Math.random() * (height - 150) + 50,
+                    vx: (Math.random() - 0.5) * 4.5,
+                    vy: (Math.random() - 0.5) * 4.5
+                };
+
+                el.onclick = () => handleOrbTap(orbData);
+                playArea.appendChild(el);
+                orbs.push(orbData);
+            });
+        }
+
         function showSuccessPopup() {
             modalEmoji.innerText = currentWordObj.emoji;
-            modalTitle.innerText = "Fantastic!";
-            modalDesc.innerText = `You correctly spelled ${currentWordObj.word}!`;
+            modalTitle.innerText = "Magical!";
+            modalDesc.innerText = `You successfully brewed ${currentWordObj.word}!`;
             successModal.classList.add('show');
         }
 
@@ -456,7 +489,6 @@
             loadNewWord();
         }
 
-        // Initialize first run
         loadNewWord();
     </script>
 </body>
