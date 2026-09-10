@@ -3,522 +3,461 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Retro Pocket Arcade</title>
+    <title>Word Forest: Magic Letter Catcher</title>
     <style>
         * {
             box-sizing: border-box;
             user-select: none;
             -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background: #09090b;
-            color: #fafafa;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        header {
-            text-align: center;
-            padding: 15px;
-            width: 100%;
-            background: #18181b;
-            border-bottom: 2px solid #27272a;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 1.5rem;
-            color: #f43f5e;
-            text-shadow: 0 0 10px rgba(244, 63, 94, 0.5);
-            letter-spacing: 2px;
-        }
-
-        /* Menu Hub Screen */
-        #menu-screen {
+            background: linear-gradient(to bottom, #1e1b4b, #312e81, #1e1b4b);
+            color: #ffffff;
+            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', Tahoma, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        #game-wrapper {
+            position: relative;
             width: 100%;
-            max-width: 400px;
-            flex-grow: 1;
-        }
-
-        .game-card {
-            background: #18181b;
-            border: 2px solid #3f3f46;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 10px 0;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .game-card:active {
-            transform: scale(0.97);
-            background: #27272a;
-        }
-
-        .game-card h3 {
-            margin: 0 0 8px 0;
-            color: #38bdf8;
-            font-size: 1.2rem;
-        }
-
-        .game-card p {
-            margin: 0;
-            font-size: 0.85rem;
-            color: #a1a1aa;
-        }
-
-        /* Active Game Wrapper */
-        #game-screen {
-            display: none;
+            max-width: 480px;
+            height: 100%;
+            max-height: 750px;
+            background: linear-gradient(to bottom, #38bdf8 0%, #bae6fd 60%, #4ade80 60%, #15803d 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            display: flex;
             flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 450px;
-            padding: 15px;
-            flex-grow: 1;
+            justify-content: space-between;
         }
 
-        .game-header {
+        /* Top Header UI */
+        .hud {
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            margin-bottom: 15px;
-            font-size: 1rem;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border-bottom: 3px dashed rgba(255, 255, 255, 0.6);
+            z-index: 10;
+        }
+
+        .hud-box {
+            background: #ffffff;
+            color: #1e293b;
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 1.1rem;
             font-weight: bold;
+            box-shadow: 0 4px 0 #cbd5e1;
         }
 
-        .back-btn {
-            background: #3f3f46;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-family: inherit;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* Canvas and Play areas */
-        canvas {
-            background: #121214;
-            border: 3px solid #52525b;
-            border-radius: 8px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            touch-action: none;
-            max-width: 100%;
-        }
-
-        /* Mobile Controls */
-        .controls-row {
+        /* Word Target Banner */
+        .target-section {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            z-index: 10;
         }
 
-        .ctrl-btn {
-            background: #27272a;
-            color: white;
-            border: 2px solid #52525b;
-            padding: 18px 24px;
-            font-size: 1.2rem;
-            border-radius: 12px;
-            flex-grow: 1;
-            font-family: inherit;
+        .hint-text {
+            font-size: 0.95rem;
+            color: #14532d;
             font-weight: bold;
-            touch-action: manipulation;
-            box-shadow: 0 4px #18181b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 4px 12px;
+            border-radius: 10px;
+            margin-bottom: 6px;
         }
 
-        .ctrl-btn:active {
-            background: #3f3f46;
-            transform: translateY(3px);
-            box-shadow: 0 1px #18181b;
+        .word-display {
+            display: flex;
+            gap: 8px;
         }
 
-        /* Game Over Overlays inside the containers */
-        .overlay-msg {
+        .letter-slot {
+            width: 45px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #16a34a;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #cbd5e1;
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .letter-slot.filled {
+            color: #16a34a;
+            border-color: #15803d;
+            background: #dcfce7;
+            transform: scale(1.1);
+        }
+
+        /* Play Area / Canvas */
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Floating Interactive Bubbles Layer */
+        #bubbles-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 8;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #60a5fa);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e3a8a;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            animation: floatUp 4s linear infinite;
+            transition: transform 0.1s;
+        }
+
+        .bubble:active {
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translate(-50%, 0) scale(0.8); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(-50%, -550px) scale(1.1); opacity: 0; }
+        }
+
+        /* Celebration overlay banner */
+        #success-modal {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(9, 9, 11, 0.9);
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid #f43f5e;
+            transform: translate(-50%, -50%) scale(0);
+            background: #ffffff;
+            border: 6px solid #4ade80;
+            padding: 30px;
+            border-radius: 25px;
             text-align: center;
-            display: none;
-            z-index: 10;
-            width: 80%;
+            z-index: 20;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .container-box {
-            position: relative;
+        #success-modal.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        #success-modal h2 {
+            color: #15803d;
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+        }
+
+        .action-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #14532d;
+            font-family: inherit;
+            margin-top: 15px;
+            transition: 0.1s;
+        }
+
+        .action-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #14532d;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>👾 POCKET ARCADE</h1>
-    </header>
+    <div id="game-wrapper">
+        <!-- Canvas for visual background depth (Sun rays, trees, twinkling particles) -->
+        <canvas id="gameCanvas"></canvas>
 
-    <!-- MENU HUB -->
-    <div id="menu-screen">
-        <p style="color: #a1a1aa; margin-bottom: 20px; font-size: 0.9rem;">Choose a game to play:</p>
-        
-        <div class="game-card" onclick="startApp(1)">
-            <h3>🚀 Neon Dodger</h3>
-            <p>Dodge falling cosmic space obstacles!</p>
+        <!-- UI Information panel -->
+        <div class="hud">
+            <div class="hud-box">⭐ Stars: <span id="score">0</span></div>
+            <div class="hud-box" id="word-category">Animals</div>
         </div>
 
-        <div class="game-card" onclick="startApp(2)">
-            <h3>🐸 Lilypad Hop</h3>
-            <p>Tap left/right to jump up moving logs safely.</p>
-        </div>
-
-        <div class="game-card" onclick="startApp(3)">
-            <h3>💡 Tap-A-Flash</h3>
-            <p>Test your speed on glowing grid squares.</p>
-        </div>
-    </div>
-
-    <!-- GAMEPLAY VIEWCONTAINER -->
-    <div id="game-screen">
-        <div class="game-header">
-            <button class="back-btn" onclick="returnToMenu()">⬅ MENU</button>
-            <div>SCORE: <span id="live-score">0</span></div>
-        </div>
-
-        <div class="container-box" id="canvas-wrapper">
-            <canvas id="gameCanvas" width="360" height="400"></canvas>
-            <div id="game-over-box" class="overlay-msg">
-                <h2 style="color: #f43f5e; margin-top:0;">GAME OVER</h2>
-                <p id="final-score-text" style="font-size: 0.9rem; margin-bottom: 15px;">Score: 0</p>
-                <button class="back-btn" style="background:#f43f5e; width:100%; padding: 12px;" onclick="restartActiveGame()">PLAY AGAIN</button>
+        <!-- Target word mapping interface -->
+        <div class="target-section">
+            <div class="hint-text" id="hint-label">Find the letters for: CAT</div>
+            <div class="word-display" id="word-slots">
+                <!-- Dynamically populated letter slot elements -->
             </div>
         </div>
 
-        <!-- Dynamic Controls Container -->
-        <div id="controls-container" class="controls-row"></div>
+        <!-- Layer for interactive bubbles -->
+        <div id="bubbles-layer"></div>
+
+        <!-- Success Popup Modal -->
+        <div id="success-modal">
+            <div style="font-size: 3.5rem; margin-bottom: 5px;" id="modal-emoji">🐱</div>
+            <h2 id="modal-title">Awesome!</h2>
+            <p id="modal-desc" style="color: #475569; font-size: 1.1rem; margin: 0;">You spelled CAT correctly!</p>
+            <button class="action-btn" onclick="nextWord()">NEXT WORD 🚀</button>
+        </div>
     </div>
 
     <script>
-        const menuScreen = document.getElementById('menu-screen');
-        const gameScreen = document.getElementById('game-screen');
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const scoreEl = document.getElementById('live-score');
-        const gameOverBox = document.getElementById('game-over-box');
-        const finalScoreText = document.getElementById('final-score-text');
-        const controlsContainer = document.getElementById('controls-container');
+        const bubblesLayer = document.getElementById('bubbles-layer');
+        const wordSlotsEl = document.getElementById('word-slots');
+        const hintLabel = document.getElementById('hint-label');
+        const scoreEl = document.getElementById('score');
+        const successModal = document.getElementById('success-modal');
+        const modalEmoji = document.getElementById('modal-emoji');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
 
-        let activeGameId = null;
+        // Word Database structured for kids learning
+        const wordList = [
+            { word: "CAT", hint: "A furry pet that meows", emoji: "🐱", category: "Animals" },
+            { word: "DOG", hint: "A friendly barking animal", emoji: "🐶", category: "Animals" },
+            { word: "SUN", hint: "Bright yellow star in the sky", emoji: "☀️", category: "Nature" },
+            { word: "STAR", hint: "Twinkles high up at night", emoji: "⭐", category: "Nature" },
+            { word: "BOOK", hint: "Something you read for stories", emoji: "📖", category: "School" },
+            { word: "TREE", hint: "Tall plant with green leaves", emoji: "🌳", category: "Nature" },
+            { word: "FISH", hint: "Swims around in the water", emoji: "🐠", category: "Animals" },
+            { word: "MOON", hint: "Shines bright in the dark night", emoji: "🌙", category: "Nature" }
+        ];
+
+        let currentWordObj = null;
+        let currentLetterIndex = 0;
         let score = 0;
-        let isGameOver = false;
-        let gameLoopId = null;
-        let gameData = {};
+        let activeBubbles = [];
+        let particles = [];
 
-        // Audio Generator via Web Audio API
+        // Simple Audio Synthesizer (No external assets required, crystal clean sound)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playTone(freq, duration, type='sine') {
+        function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + duration);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
+
+                if (type === 'pop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(700, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                } else if (type === 'win') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'error') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(100, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.2);
+                }
             } catch(e) {}
         }
 
-        function startApp(id) {
-            activeGameId = id;
-            menuScreen.style.display = 'none';
-            gameScreen.style.display = 'flex';
-            gameOverBox.style.display = 'none';
-            score = 0;
-            scoreEl.innerText = score;
-            isGameOver = false;
+        // Resize Canvas to fit parent wrapper accurately
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-            initGame();
+        // Background visual particle generation (Fireflies / sparkles)
+        for (let i = 0; i < 20; i++) {
+            particles.push({
+                x: Math.random() * 480,
+                y: Math.random() * 750,
+                radius: Math.random() * 3 + 1,
+                speedY: (Math.random() * 0.5 + 0.2) * -1,
+                opacity: Math.random()
+            });
         }
 
-        function returnToMenu() {
-            cancelAnimationFrame(gameLoopId);
-            gameScreen.style.display = 'none';
-            menuScreen.style.display = 'flex';
-            activeGameId = null;
+        function drawBackground() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw glowing background ambient particles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            particles.forEach(p => {
+                p.y += p.speedY;
+                if (p.y < 0) p.y = canvas.height;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(Math.sin(Date.now() * 0.002 + p.x))})`;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(drawBackground);
         }
+        drawBackground();
 
-        function triggerGameOver() {
-            isGameOver = true;
-            cancelAnimationFrame(gameLoopId);
-            finalScoreText.innerText = `Final Score: ${score}`;
-            gameOverBox.style.display = 'block';
-            playTone(120, 0.3, 'sawtooth');
-        }
-
-        function restartActiveGame() {
-            gameOverBox.style.display = 'none';
-            score = 0;
-            scoreEl.innerText = score;
-            isGameOver = false;
-            initGame();
-        }
-
-        // ==========================================
-        // ROUTER / GAME DISPATCHER
-        // ==========================================
-        function initGame() {
-            controlsContainer.innerHTML = '';
-            if (activeGameId === 1) initNeonDodger();
-            if (activeGameId === 2) initLilypadHop();
-            if (activeGameId === 3) initTapFlash();
-        }
-
-        function runLoop() {
-            if (isGameOver) return;
-            if (activeGameId === 1) updateNeonDodger();
-            if (activeGameId === 2) updateLilypadHop();
-            // TapFlash uses interactive interval events instead of core canvas loops
-            if (activeGameId !== 3) {
-                gameLoopId = requestAnimationFrame(runLoop);
-            }
-        }
-
-        // ==========================================
-        // GAME 1: NEON DODGER (Space Side-Stepper)
-        // ==========================================
-        function initNeonDodger() {
-            gameData = {
-                playerX: 160,
-                obstacles: [],
-                speedMultiplier: 1
-            };
-
-            // Touch / Keyboard layout controls
-            controlsContainer.innerHTML = `
-                <button class="ctrl-btn" id="left-btn">◀ LEFT</button>
-                <button class="ctrl-btn" id="right-btn">RIGHT ▶</button>
-            `;
-
-            const moveLeft = () => { if(!isGameOver) gameData.playerX = Math.max(20, gameData.playerX - 40); };
-            const moveRight = () => { if(!isGameOver) gameData.playerX = Math.min(340, gameData.playerX + 40); };
-
-            document.getElementById('left-btn').onclick = moveLeft;
-            document.getElementById('right-btn').onclick = moveRight;
+        function loadNewWord() {
+            successModal.classList.remove('show');
+            currentWordObj = wordList[Math.floor(Math.random() * wordList.length)];
+            currentLetterIndex = 0;
             
-            // Allow keyboard arrows too
-            window.onkeydown = (e) => {
-                if (activeGameId === 1) {
-                    if (e.key === 'ArrowLeft') moveLeft();
-                    if (e.key === 'ArrowRight') moveRight();
-                }
-            };
-
-            runLoop();
-        }
-
-        function updateNeonDodger() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Spawn obstacles
-            if (Math.random() < 0.04) {
-                gameData.obstacles.push({
-                    x: Math.floor(Math.random() * 7) * 45 + 20,
-                    y: -20,
-                    size: 25
-                });
+            hintLabel.innerText = `${currentWordObj.category}: ${currentWordObj.hint}`;
+            
+            // Build letter slot elements
+            wordSlotsEl.innerHTML = '';
+            for (let i = 0; i < currentWordObj.word.length; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'letter-slot';
+                slot.innerText = '_';
+                wordSlotsEl.appendChild(slot);
             }
 
-            // Update & Draw obstacles
-            ctx.fillStyle = '#f43f5e';
-            for (let i = gameData.obstacles.length - 1; i >= 0; i--) {
-                let obs = gameData.obstacles[i];
-                obs.y += 3.5 + (score * 0.05);
+            spawnBubbleBatch();
+        }
 
-                ctx.fillRect(obs.x - obs.size/2, obs.y, obs.size, obs.size);
+        // Spawns bubbles containing the exact next letter + random distraction letters
+        function spawnBubbleBatch() {
+            bubblesLayer.innerHTML = '';
+            activeBubbles = [];
 
-                // Collision detection
-                let pBox = { x: gameData.playerX, y: 350, size: 25 };
-                if (obs.x < pBox.x + pBox.size && obs.x + obs.size > pBox.x &&
-                    obs.y < pBox.y + pBox.size && obs.y + obs.size > pBox.y) {
-                    triggerGameOver();
-                    return;
-                }
-
-                // Remove off-screen & add score
-                if (obs.y > 420) {
-                    gameData.obstacles.splice(i, 1);
-                    score += 1;
-                    scoreEl.innerText = score;
-                    playTone(600, 0.05);
+            const targetChar = currentWordObj.word[currentLetterIndex];
+            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            
+            // Generate pool of letters (Ensure target letter is always present)
+            let lettersToSpawn = [targetChar];
+            while(lettersToSpawn.length < 4) {
+                let randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if(!lettersToSpawn.includes(randomChar)) {
+                    lettersToSpawn.push(randomChar);
                 }
             }
 
-            // Draw Player Ship
-            ctx.fillStyle = '#38bdf8';
-            ctx.fillRect(gameData.playerX - 12, 350, 25, 25);
+            // Shuffle bubble layout positions horizontally
+            lettersToSpawn.sort(() => Math.random() - 0.5);
 
-            gameLoopId = requestAnimationFrame(runLoop);
+            lettersToSpawn.forEach((char, index) => {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.innerText = char;
+                
+                // Position spread across screen width safely
+                const posX = 70 + (index * 100) + (Math.random() * 20 - 10);
+                const posY = 520 + (Math.random() * 40);
+                
+                bubble.style.left = posX + 'px';
+                bubble.style.top = posY + 'px';
+                bubble.style.animationDuration = (3.5 + Math.random() * 1.5) + 's';
+
+                bubble.onclick = () => handleLetterTap(char, bubble);
+                bubblesLayer.appendChild(bubble);
+            });
         }
 
-        // ==========================================
-        // GAME 2: LILYPAD HOP (Vertical climber)
-        // ==========================================
-        function initLilypadHop() {
-            gameData = {
-                player: { x: 180, y: 320, radius: 10 },
-                platforms: [
-                    { x: 150, y: 350, w: 60, h: 12 },
-                    { x: 100, y: 260, w: 60, h: 12, dir: 1 },
-                    { x: 200, y: 170, w: 60, h: 12, dir: -1 },
-                    { x: 130, y: 80, w: 60, h: 12, dir: 1 }
-                ]
-            };
+        function handleLetterTap(char, bubbleElement) {
+            const expectedChar = currentWordObj.word[currentLetterIndex];
 
-            controlsContainer.innerHTML = `
-                <button class="ctrl-btn" id="hop-btn">⚡ JOP / SWITCH SIDE</button>
-            `;
+            if (char === expectedChar) {
+                // Correct Letter!
+                playSound('pop');
+                bubbleElement.remove();
 
-            const hopAction = () => {
-                if (isGameOver) return;
-                gameData.player.x = gameData.player.x > 180 ? 120 : 240;
-                playTone(450, 0.08);
-            };
+                const slots = wordSlotsEl.children;
+                slots[currentLetterIndex].innerText = char;
+                slots[currentLetterIndex].classList.add('filled');
 
-            document.getElementById('hop-btn').onclick = hopAction;
-            window.onkeydown = (e) => { if (activeGameId === 2 && e.key === ' ') hopAction(); };
+                currentLetterIndex++;
 
-            runLoop();
-        }
-
-        function updateLilypadHop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Move platforms sideways
-            gameData.platforms.forEach(p => {
-                if (p.dir) {
-                    p.x += p.dir * 1.8;
-                    if (p.x < 10 || p.x + p.w > 350) p.dir *= -1;
-                }
-            });
-
-            // Draw Platforms
-            ctx.fillStyle = '#22c55e';
-            gameData.platforms.forEach(p => {
-                ctx.fillRect(p.x, p.y, p.w, p.h);
-            });
-
-            // Scroll world down automatically
-            gameData.platforms.forEach(p => {
-                p.y += 1.2;
-            });
-
-            // Respawn platforms at bottom if they go off screen
-            gameData.platforms.forEach(p => {
-                if (p.y > 400) {
-                    p.y = -20;
-                    p.x = Math.random() * 250 + 20;
-                    score += 2;
+                if (currentLetterIndex >= currentWordObj.word.length) {
+                    // Word Completed Successfully!
+                    score += 10;
                     scoreEl.innerText = score;
+                    playSound('win');
+                    showSuccessPopup();
+                } else {
+                    // Spawn next batch of letters for the next character
+                    spawnBubbleBatch();
                 }
-            });
-
-            // Simple vertical follow for player
-            gameData.player.y = 220;
-
-            // Check if player misses platforms (falls off screen bottom)
-            let onPlatform = gameData.platforms.some(p => 
-                gameData.player.x >= p.x && gameData.player.x <= p.x + p.w &&
-                gameData.player.y + 10 >= p.y && gameData.player.y <= p.y + p.h
-            );
-
-            // Draw Frog / Player
-            ctx.fillStyle = '#fbbf24';
-            ctx.beginPath();
-            ctx.arc(gameData.player.x, gameData.player.y, gameData.player.radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            gameLoopId = requestAnimationFrame(runLoop);
+            } else {
+                // Wrong Letter tapped
+                playSound('error');
+                bubbleElement.style.transform = 'translate(-50%, -50%) scale(0.6)';
+                setTimeout(() => {
+                    bubbleElement.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 150);
+            }
         }
 
-        // ==========================================
-        // GAME 3: TAP-A-FLASH (Reaction / Memory)
-        // ==========================================
-        function initTapFlash() {
-            gameData = {
-                activeIdx: -1,
-                timerId: null
-            };
-
-            // Setup a 2x2 grid pad interface inside controls/canvas container
-            controlsContainer.innerHTML = `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
-                    <button class="ctrl-btn flash-pad" data-id="0" style="background:#18181b; height:70px;">1</button>
-                    <button class="ctrl-btn flash-pad" data-id="1" style="background:#18181b; height:70px;">2</button>
-                    <button class="ctrl-btn flash-pad" data-id="2" style="background:#18181b; height:70px;">3</button>
-                    <button class="ctrl-btn flash-pad" data-id="3" style="background:#18181b; height:70px;">4</button>
-                </div>
-            `;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#a1a1aa';
-            ctx.font = '16px Courier New';
-            ctx.textAlign = 'center';
-            ctx.fillText("Tap the flashing pads quickly!", canvas.width / 2, canvas.height / 2);
-
-            const pads = document.querySelectorAll('.flash-pad');
-            pads.forEach(pad => {
-                pad.onclick = (e) => {
-                    if (isGameOver) return;
-                    let id = parseInt(e.target.getAttribute('data-id'));
-                    if (id === gameData.activeIdx) {
-                        score += 10;
-                        scoreEl.innerText = score;
-                        playTone(800, 0.1);
-                        nextFlashRound();
-                    } else {
-                        triggerGameOver();
-                    }
-                };
-            });
-
-            nextFlashRound();
+        function showSuccessPopup() {
+            modalEmoji.innerText = currentWordObj.emoji;
+            modalTitle.innerText = "Fantastic!";
+            modalDesc.innerText = `You correctly spelled ${currentWordObj.word}!`;
+            successModal.classList.add('show');
         }
 
-        function nextFlashRound() {
-            if (isGameOver) return;
-            const pads = document.querySelectorAll('.flash-pad');
-            pads.forEach(p => p.style.background = '#18181b');
-
-            gameData.activeIdx = Math.floor(Math.random() * 4);
-            pads[gameData.activeIdx].style.background = '#f43f5e';
-            playTone(300, 0.05);
+        function nextWord() {
+            loadNewWord();
         }
+
+        // Initialize first run
+        loadNewWord();
     </script>
 </body>
 </html>
