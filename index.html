@@ -3,66 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat vs. The Infinite Laser Pointer</title>
+    <title>Pigeon Panic: The Park Bench Defense</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: #121216;
-            color: #fff;
-            font-family: 'Courier New', Courier, monospace;
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            cursor: none; /* Hide default cursor to use the laser dot */
         }
 
         #game-container {
             position: relative;
             width: 800px;
             height: 500px;
-            background: #1e1e24;
-            border: 4px dashed #ff0055;
+            background: linear-gradient(to bottom, #38bdf8 0%, #38bdf8 65%, #22c55e 65%, #15803d 100%);
+            border: 4px solid #334155;
             border-radius: 12px;
-            box-shadow: 0 0 30px rgba(255, 0, 85, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             overflow: hidden;
-        }
-
-        /* The Custom Laser Pointer Cursor */
-        #laser-cursor {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background: radial-gradient(circle, #fff 20%, #ff0000 60%, transparent 100%);
-            border-radius: 50%;
-            pointer-events: none;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 12px #ff0000, 0 0 25px #ff0000;
-            z-index: 100;
-        }
-
-        /* The Cat */
-        #cat {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90px;
-            height: 80px;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.05s ease;
-        }
-
-        /* SVG styling inside cat for expressions */
-        .cat-eye {
-            fill: #00ffcc;
-        }
-        .cat-angry {
-            fill: #ff0055;
+            cursor: crosshair;
         }
 
         /* UI Panel */
@@ -70,24 +36,91 @@
             display: flex;
             justify-content: space-between;
             width: 800px;
-            margin-bottom: 10px;
-            font-size: 20px;
+            margin-bottom: 12px;
+            font-size: 18px;
             font-weight: bold;
-            text-shadow: 2px 2px #000;
         }
 
-        .hud-item {
-            background: #2a2a35;
+        .hud-card {
+            background: #1e293b;
             padding: 8px 16px;
-            border-radius: 6px;
-            border: 2px solid #444;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
 
-        #instructions {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #888;
-            text-align: center;
+        /* The Bench & Sandwich in the center */
+        #bench-zone {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .bench-seat {
+            width: 260px;
+            height: 20px;
+            background: #9a3412;
+            border-radius: 4px;
+            box-shadow: 0 4px 0 #7c2d12;
+        }
+
+        .bench-legs {
+            width: 220px;
+            height: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .leg {
+            width: 15px;
+            height: 40px;
+            background: #451a03;
+        }
+
+        #sandwich {
+            position: absolute;
+            top: -25px;
+            font-size: 32px;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+
+        /* Pigeon Styles */
+        .pigeon {
+            position: absolute;
+            width: 50px;
+            height: 40px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+
+        .pigeon:active {
+            transform: scale(0.7) rotate(20deg);
+        }
+
+        /* Feathers / Dust Particle Effect */
+        .feather {
+            position: absolute;
+            width: 6px;
+            height: 10px;
+            background: #cbd5e1;
+            border-radius: 50% 50% 20% 20%;
+            pointer-events: none;
+            animation: floatAway 0.5s forwards;
+            z-index: 50;
+        }
+
+        @keyframes floatAway {
+            0% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(360deg); }
         }
 
         /* Game Over Screen */
@@ -97,276 +130,286 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(18, 18, 22, 0.9);
+            background: rgba(15, 23, 42, 0.95);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 200;
+            z-index: 100;
             display: none;
         }
 
         #game-over h1 {
-            color: #ff0055;
+            color: #ef4444;
             font-size: 42px;
             margin-bottom: 10px;
-            text-shadow: 3px 3px #000;
         }
 
         .btn {
-            background: #ff0055;
+            background: #3b82f6;
             color: white;
             border: none;
             padding: 12px 24px;
             font-size: 18px;
-            font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px #990033;
+            box-shadow: 0 4px #1d4ed8;
             transition: 0.1s;
         }
 
         .btn:active {
             transform: translateY(4px);
-            box-shadow: 0 0 #990033;
+            box-shadow: 0 0 #1d4ed8;
         }
 
-        /* Slash / Scratch Particle Effect */
-        .scratch {
-            position: absolute;
-            width: 40px;
-            height: 4px;
-            background: #00ffcc;
-            pointer-events: none;
-            transform-origin: left center;
-            animation: fadeOut 0.3s forwards;
-            z-index: 50;
-            box-shadow: 0 0 8px #00ffcc;
-        }
-
-        @keyframes fadeOut {
-            0% { opacity: 1; transform: scaleX(1); }
-            100% { opacity: 0; transform: scaleX(1.5) translateY(10px); }
+        #instructions {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #94a3b8;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 
     <div id="ui">
-        <div class="hud-item">SCORE: <span id="score">0</span></div>
-        <div class="hud-item">CAT RAGE: <span id="rage">0</span>%</div>
+        <div class="hud-card">PIGEONS SHOOED: <span id="score">0</span></div>
+        <div class="hud-card">SANDWICH HEALTH: <span id="health">100</span>%</div>
     </div>
 
     <div id="game-container" id="gameArea">
-        <div id="laser-cursor"></div>
-        
-        <!-- Animated CSS/SVG Cat -->
-        <div id="cat">
-            <svg viewBox="0 0 100 90" width="100" height="90">
-                <!-- Ears -->
-                <polygon points="10,30 25,0 45,25" fill="#a66533"/>
-                <polygon points="15,25 25,8 38,23" fill="#ffb3d1"/>
-                <polygon points="90,30 75,0 55,25" fill="#a66533"/>
-                <polygon points="85,25 75,8 62,23" fill="#ffb3d1"/>
-                <!-- Body/Head -->
-                <ellipse cx="50" cy="55" rx="40" ry="32" fill="#d98c4e"/>
-                <!-- Cheeks -->
-                <circle cx="30" cy="65" rx="10" ry="8" fill="#f2c19d"/>
-                <circle cx="70" cy="65" rx="10" ry="8" fill="#f2c19d"/>
-                <!-- Eyes (Dynamic) -->
-                <ellipse id="left-eye" cx="35" cy="45" rx="6" ry="9" fill="#00ffcc"/>
-                <circle cx="37" cy="45" r="3" fill="#000"/>
-                <ellipse id="right-eye" cx="65" cy="45" rx="6" ry="9" fill="#00ffcc"/>
-                <circle cx="63" cy="45" r="3" fill="#000"/>
-                <!-- Nose & Mouth -->
-                <polygon points="47,56 53,56 50,60" fill="#ff80b3"/>
-                <path d="M 50 60 Q 45 68 40 63 M 50 60 Q 55 68 60 63" stroke="#593319" stroke-width="2" fill="none"/>
-                <!-- Whiskers -->
-                <line x1="15" y1="60" x2="2" y2="57" stroke="#593319" stroke-width="1.5"/>
-                <line x1="15" y1="65" x2="1" y2="67" stroke="#593319" stroke-width="1.5"/>
-                <line x1="85" y1="60" x2="98" y2="57" stroke="#593319" stroke-width="1.5"/>
-                <line x1="85" y1="65" x2="99" y2="67" stroke="#593319" stroke-width="1.5"/>
-            </svg>
+        <!-- Bench and Central Sandwich -->
+        <div id="bench-zone">
+            <div id="sandwich">🥪</div>
+            <div class="bench-seat"></div>
+            <div class="bench-legs">
+                <div class="leg"></div>
+                <div class="leg"></div>
+            </div>
         </div>
 
         <!-- Game Over Modal -->
         <div id="game-over">
-            <h1>BUSTED BY THE CAT!</h1>
-            <p id="final-score" style="margin-bottom: 20px; font-size: 18px;">You distracted the cat for 0 seconds.</p>
-            <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
+            <h1>THE PIGEONS WON!</h1>
+            <p id="final-score" style="margin-bottom: 20px; font-size: 18px; color: #cbd5e1;">Your sandwich was completely devoured.</p>
+            <button class="btn" onclick="restartGame()">PROTECT ANOTHER SNACK</button>
         </div>
     </div>
 
     <div id="instructions">
-        Move the laser pointer around. Don't let the cat catch it, or its rage will reach 100%! Click to spawn bonus treats.
+        Click on the approaching pigeons rapidly to shoo them away before they reach your sandwich!
     </div>
 
     <script>
         const container = document.getElementById('game-container');
-        const cursor = document.getElementById('laser-cursor');
-        const cat = document.getElementById('cat');
         const scoreDisplay = document.getElementById('score');
-        const rageDisplay = document.getElementById('rage');
+        const healthDisplay = document.getElementById('health');
+        const sandwich = document.getElementById('sandwich');
         const gameOverScreen = document.getElementById('game-over');
         const finalScoreDisplay = document.getElementById('final-score');
-        const leftEye = document.getElementById('left-eye');
-        const rightEye = document.getElementById('right-eye');
 
-        let mouseX = 400;
-        let mouseY = 250;
-        let catX = 400;
-        let catY = 400;
-        
         let score = 0;
-        let rage = 0;
+        let sandwichHealth = 100;
         let isGameOver = false;
-        let gameInterval;
-        let scoreInterval;
+        let pigeons = [];
+        let spawnTimer = null;
+        let gameInterval = null;
 
-        // Sound effect generator using Web Audio API
+        // Web Audio API sound generator
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
 
-            if (type === 'catch') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.2);
-                gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            if (type === 'shoo') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.2);
-            } else if (type === 'score') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.stop(audioCtx.currentTime + 0.15);
+            } else if (type === 'peck') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.1);
             }
         }
 
-        // Track Mouse position relative to game container
-        container.addEventListener('mousemove', (e) => {
-            const rect = container.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-
-            cursor.style.left = mouseX + 'px';
-            cursor.style.top = mouseY + 'px';
-        });
-
-        // Click to add floating laser distractions (bonus points)
-        container.addEventListener('click', (e) => {
-            if (isGameOver) return;
-            playSound('score');
-            score += 5;
-            scoreDisplay.innerText = score;
-            
-            // Create scratch effect particle on click
-            const scratch = document.createElement('div');
-            scratch.className = 'scratch';
-            scratch.style.left = mouseX + 'px';
-            scratch.style.top = mouseY + 'px';
-            scratch.style.transform = `rotate(${Math.random() * 360}deg)`;
-            container.appendChild(scratch);
-            setTimeout(() => scratch.remove(), 300);
-        });
-
-        // Main game loop
-        function updateGame() {
+        // Spawn a new pigeon from a random side outside the container view
+        function spawnPigeon() {
             if (isGameOver) return;
 
-            // Cat AI: Chases the laser smoothly with varying speed based on distance
-            const dx = mouseX - catX;
-            const dy = mouseY - catY;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-
-            // Cat movement interpolation (speed factor)
-            let speed = 0.035;
-            catX += dx * speed;
-            catY += dy * speed;
-
-            // Constrain cat inside container limits
-            catX = Math.max(45, Math.min(755, catX));
-            catY = Math.max(40, Math.min(460, catY));
-
-            cat.style.left = catX + 'px';
-            cat.style.top = catY + 'px';
+            const pigeonEl = document.createElement('div');
+            pigeonEl.className = 'pigeon';
             
-            // Flip cat horizontally depending on direction facing the laser
-            if (dx > 0) {
-                cat.style.transform = 'translateX(-50%) scaleX(1)';
-            } else {
-                cat.style.transform = 'translateX(-50%) scaleX(-1)';
+            // SVG Graphic for the pigeon
+            pigeonEl.innerHTML = `
+                <svg viewBox="0 0 60 50" width="50" height="40">
+                    <!-- Body -->
+                    <ellipse cx="30" cy="30" rx="18" ry="12" fill="#94a3b8"/>
+                    <!-- Head -->
+                    <circle cx="42" cy="20" r="8" fill="#64748b"/>
+                    <!-- Beak -->
+                    <polygon points="48,18 56,20 48,22" fill="#f59e0b"/>
+                    <!-- Eye -->
+                    <circle cx="44" cy="18" r="1.5" fill="#000"/>
+                    <!-- Wing -->
+                    <path d="M 20 25 Q 30 15 35 30" fill="#475569"/>
+                    <!-- Feet -->
+                    <line x1="25" y1="42" x2="22" y2="48" stroke="#f59e0b" stroke-width="2"/>
+                    <line x1="35" y1="42" x2="38" y2="48" stroke="#f59e0b" stroke-width="2"/>
+                </svg>
+            `;
+
+            // Random position along boundaries (left, right, or top)
+            const side = Math.floor(Math.random() * 3);
+            let startX, startY;
+
+            if (side === 0) { // Left
+                startX = -60;
+                startY = Math.random() * 350 + 50;
+            } else if (side === 1) { // Right
+                startX = 820;
+                startY = Math.random() * 350 + 50;
+            } else { // Top
+                startX = Math.random() * 700 + 50;
+                startY = -50;
             }
 
-            // Check collision (Cat caught the laser!)
-            if (dist < 35) {
-                rage += 2.5; // Rage spikes quickly when caught
-                if (rage >= 100) {
-                    rage = 100;
-                    triggerGameOver();
+            let pX = startX;
+            let pY = startY;
+
+            // Target is the center sandwich zone
+            const targetX = 375;
+            const targetY = 320;
+
+            const speed = 1.2 + Math.random() * 1.5; // Random speeds
+
+            container.appendChild(pigeonEl);
+
+            const pigeonObj = {
+                element: pigeonEl,
+                x: pX,
+                y: pY,
+                update: function() {
+                    const dx = targetX - this.x;
+                    const dy = targetY - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 40) {
+                        // Reached the sandwich! Deal damage
+                        sandwichHealth -= 0.5;
+                        healthDisplay.innerText = Math.max(0, Math.floor(sandwichHealth));
+                        
+                        // Shake sandwich animation
+                        sandwich.style.transform = `scale(${1 + Math.random() * 0.3}) rotate(${(Math.random() - 0.5) * 20}deg)`;
+                        playSound('peck');
+
+                        if (sandwichHealth <= 0) {
+                            triggerGameOver();
+                        }
+                        return false; // Remove pigeon
+                    }
+
+                    // Move towards target
+                    this.x += (dx / dist) * speed;
+                    this.y += (dy / dist) * speed;
+
+                    this.element.style.left = this.x + 'px';
+                    this.element.style.top = this.y + 'px';
+
+                    // Face orientation
+                    if (dx < 0) {
+                        this.element.style.transform = 'scaleX(-1)';
+                    } else {
+                        this.element.style.transform = 'scaleX(1)';
+                    }
+
+                    return true;
                 }
-                // Flash eyes red when catching
-                leftEye.setAttribute('fill', '#ff0055');
-                rightEye.setAttribute('fill', '#ff0055');
-                playSound('catch');
-            } else {
-                // Cool down eyes back to normal
-                leftEye.setAttribute('fill', '#00ffcc');
-                rightEye.setAttribute('fill', '#00ffcc');
-                // Slowly reduce rage if safe
-                if (rage > 0) rage -= 0.15;
-            }
+            };
 
-            rage = Math.max(0, Math.min(100, rage));
-            rageDisplay.innerText = Math.floor(rage);
+            // Click event to shoo pigeon away
+            pigeonEl.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                if (isGameOver) return;
+                
+                playSound('shoo');
+                createFeathers(pigeonObj.x, pigeonObj.y);
+                pigeonEl.remove();
+                
+                // Remove from active array
+                pigeons = pigeons.filter(p => p !== pigeonObj);
+
+                score++;
+                scoreDisplay.innerText = score;
+            });
+
+            pigeons.push(pigeonObj);
         }
 
-        // Score accumulates over time the longer you survive without getting caught
-        function updateScore() {
-            if (!isGameOver) {
-                score += 1;
-                scoreDisplay.innerText = score;
+        // Feather explosion effect on click
+        function createFeathers(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const feather = document.createElement('div');
+                feather.className = 'feather';
+                feather.style.left = (x + 25) + 'px';
+                feather.style.top = (y + 20) + 'px';
+                
+                const dx = (Math.random() - 0.5) * 100 + 'px';
+                const dy = (Math.random() - 0.5) * 100 + 'px';
+                feather.style.setProperty('--dx', dx);
+                feather.style.setProperty('--dy', dy);
+
+                container.appendChild(feather);
+                setTimeout(() => feather.remove(), 500);
             }
+        }
+
+        function gameLoop() {
+            if (isGameOver) return;
+            
+            // Update all active pigeons
+            pigeons = pigeons.filter(p => p.update());
         }
 
         function triggerGameOver() {
             isGameOver = true;
             clearInterval(gameInterval);
-            clearInterval(scoreInterval);
-            finalScoreDisplay.innerText = `You survived with a score of ${score}!`;
+            clearInterval(spawnTimer);
+            pigeons.forEach(p => p.element.remove());
+            pigeons = [];
+
+            finalScoreDisplay.innerText = `You managed to shoo away ${score} pigeons before your sandwich fell!`;
             gameOverScreen.style.display = 'flex';
         }
 
         function restartGame() {
             score = 0;
-            rage = 0;
+            sandwichHealth = 100;
             scoreDisplay.innerText = 0;
-            rageDisplay.innerText = 0;
-            catX = 400;
-            catY = 400;
+            healthDisplay.innerText = 100;
             isGameOver = false;
             gameOverScreen.style.display = 'none';
-            
+
             clearInterval(gameInterval);
-            clearInterval(scoreInterval);
-            gameInterval = setInterval(updateGame, 1000 / 60);
-            scoreInterval = setInterval(updateScore, 1000);
+            clearInterval(spawnTimer);
+
+            gameInterval = setInterval(gameLoop, 1000 / 60);
+            spawnTimer = setInterval(spawnPigeon, 1200); // Spawn new pigeon every 1.2 seconds
         }
 
-        // Initialize loops
-        gameInterval = setInterval(updateGame, 1000 / 60);
-        scoreInterval = setInterval(updateScore, 1000);
+        // Start initialization
+        restartGame();
     </script>
 </body>
 </html>
