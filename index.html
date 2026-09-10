@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lynn Fisher — Designer & CSS Developer</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f0;
+            --text-color: #111111;
+            --accent-color: #ff5722;
+            --card-bg: #ffffff;
+            --border-color: #111111;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            max-width: 800px;
+            margin: 4rem auto 2rem;
+            padding: 0 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        p.bio {
+            font-size: 1.25rem;
+            color: #333;
+            max-width: 600px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            padding: 1.5rem;
+            box-shadow: 4px 4px 0px var(--border-color);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .project-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--border-color);
+        }
+
+        .project-card h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+
+        .project-card h3 a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .project-card h3 a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+
+        .project-card p {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 0;
+        }
+
+        footer {
+            max-width: 800px;
+            margin: 4rem auto 2rem;
+            padding: 1.5rem;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        footer a {
+            color: var(--text-color);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Hi, I'm Lynn 👋</h1>
+        <p class="bio">I'm a designer and CSS developer out of Phoenix, Arizona. I make weird and wonderful projects for the web.</p>
+    </header>
+
+    <main>
+        <h2>Selected Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3><a href="https://a.singlediv.com" target="_blank">A Single Div</a></h3>
+                <p>CSS drawings created using only one single HTML element.</p>
+            </div>
+            <div class="project-card">
+                <h3><a href="https://nestflix.fun" target="_blank">Nestflix</a></h3>
+                <p>A mock streaming platform showcasing nested stories: movies within movies.</p>
+            </div>
+            <div class="project-card">
+                <h3><a href="https://airportcod.es" target="_blank">Airport Codes</a></h3>
+                <p>Making sense of those mysterious three-letter aviation identifiers.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Inspired by <a href="https://lynnandtonic.com" target="_blank">lynnandtonic.com</a>. Built for GitHub Pages.</p>
+    </footer>
+
+</body>
+</html>
