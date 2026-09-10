@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pigeon Panic: The Park Bench Defense</title>
+    <title>Cloud Jumper: The Infinite Bounce</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: #0f172a;
-            color: #f8fafc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #09090b;
+            color: #fafafa;
+            font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -21,106 +21,81 @@
 
         #game-container {
             position: relative;
-            width: 800px;
-            height: 500px;
-            background: linear-gradient(to bottom, #38bdf8 0%, #38bdf8 65%, #22c55e 65%, #15803d 100%);
-            border: 4px solid #334155;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 500px;
+            height: 650px;
+            background: linear-gradient(to bottom, #1e1b4b, #312e81, #3b82f6);
+            border: 4px solid #6366f1;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
             overflow: hidden;
-            cursor: crosshair;
         }
 
-        /* UI Panel */
+        /* UI Head-Up Display */
         #ui {
             display: flex;
             justify-content: space-between;
-            width: 800px;
-            margin-bottom: 12px;
+            width: 500px;
+            margin-bottom: 10px;
             font-size: 18px;
             font-weight: bold;
         }
 
-        .hud-card {
-            background: #1e293b;
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid #475569;
+        .hud-item {
+            background: #18181b;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid #3f3f46;
+        }
+
+        /* The Player (Bouncy Star) */
+        #player {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            font-size: 30px;
+            line-height: 32px;
+            text-align: center;
+            user-select: none;
+            z-index: 10;
+        }
+
+        /* Cloud Platforms */
+        .cloud {
+            position: absolute;
+            width: 80px;
+            height: 16px;
+            background: #ffffff;
+            border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            z-index: 5;
         }
 
-        /* The Bench & Sandwich in the center */
-        #bench-zone {
+        /* Danger Storm Clouds */
+        .storm-cloud {
             position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 260px;
-            height: 100px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
+            width: 80px;
+            height: 16px;
+            background: #ef4444;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ef4444;
+            z-index: 5;
         }
 
-        .bench-seat {
-            width: 260px;
-            height: 20px;
-            background: #9a3412;
-            border-radius: 4px;
-            box-shadow: 0 4px 0 #7c2d12;
-        }
-
-        .bench-legs {
-            width: 220px;
-            height: 40px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .leg {
-            width: 15px;
-            height: 40px;
-            background: #451a03;
-        }
-
-        #sandwich {
-            position: absolute;
-            top: -25px;
-            font-size: 32px;
-            user-select: none;
-            transition: transform 0.1s;
-        }
-
-        /* Pigeon Styles */
-        .pigeon {
-            position: absolute;
-            width: 50px;
-            height: 40px;
-            cursor: pointer;
-            user-select: none;
-            transition: transform 0.1s;
-        }
-
-        .pigeon:active {
-            transform: scale(0.7) rotate(20deg);
-        }
-
-        /* Feathers / Dust Particle Effect */
-        .feather {
+        /* Jump Dust Effect Particle */
+        .dust {
             position: absolute;
             width: 6px;
-            height: 10px;
-            background: #cbd5e1;
-            border-radius: 50% 50% 20% 20%;
+            height: 6px;
+            background: #ffffff;
+            border-radius: 50%;
             pointer-events: none;
-            animation: floatAway 0.5s forwards;
-            z-index: 50;
+            animation: riseFade 0.4s forwards;
+            z-index: 4;
         }
 
-        @keyframes floatAway {
-            0% { opacity: 1; transform: translate(0, 0) rotate(0deg); }
-            100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(360deg); }
+        @keyframes riseFade {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(15px) scale(0.2); }
         }
 
         /* Game Over Screen */
@@ -130,7 +105,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(9, 9, 11, 0.9);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -141,32 +116,33 @@
 
         #game-over h1 {
             color: #ef4444;
-            font-size: 42px;
+            font-size: 36px;
             margin-bottom: 10px;
         }
 
         .btn {
-            background: #3b82f6;
+            background: #6366f1;
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-size: 18px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            box-shadow: 0 4px #1d4ed8;
+            box-shadow: 0 4px #4338ca;
             transition: 0.1s;
         }
 
         .btn:active {
             transform: translateY(4px);
-            box-shadow: 0 0 #1d4ed8;
+            box-shadow: 0 0 #4338ca;
         }
 
         #instructions {
             margin-top: 10px;
-            font-size: 14px;
-            color: #94a3b8;
+            font-size: 13px;
+            color: #a1a1aa;
             text-align: center;
         }
     </style>
@@ -174,49 +150,55 @@
 <body>
 
     <div id="ui">
-        <div class="hud-card">PIGEONS SHOOED: <span id="score">0</span></div>
-        <div class="hud-card">SANDWICH HEALTH: <span id="health">100</span>%</div>
+        <div class="hud-item">HEIGHT: <span id="score">0</span>m</div>
+        <div class="hud-item">HIGH SCORE: <span id="highscore">0</span></div>
     </div>
 
-    <div id="game-container" id="gameArea">
-        <!-- Bench and Central Sandwich -->
-        <div id="bench-zone">
-            <div id="sandwich">🥪</div>
-            <div class="bench-seat"></div>
-            <div class="bench-legs">
-                <div class="leg"></div>
-                <div class="leg"></div>
-            </div>
-        </div>
+    <div id="game-container">
+        <div id="player">⭐</div>
 
         <!-- Game Over Modal -->
         <div id="game-over">
-            <h1>THE PIGEONS WON!</h1>
-            <p id="final-score" style="margin-bottom: 20px; font-size: 18px; color: #cbd5e1;">Your sandwich was completely devoured.</p>
-            <button class="btn" onclick="restartGame()">PROTECT ANOTHER SNACK</button>
+            <h1>FELL INTO THE ABYSS!</h1>
+            <p id="final-score" style="margin-bottom: 20px; font-size: 16px; color: #d4d4d8;">You reached 0 meters.</p>
+            <button class="btn" onclick="restartGame()">JUMP AGAIN</button>
         </div>
     </div>
 
     <div id="instructions">
-        Click on the approaching pigeons rapidly to shoo them away before they reach your sandwich!
+        Use <b>A / D</b> or <b>Left / Right Arrow Keys</b> to steer your star. Bounce on white clouds! Avoid red storm clouds!
     </div>
 
     <script>
         const container = document.getElementById('game-container');
+        const playerEl = document.getElementById('player');
         const scoreDisplay = document.getElementById('score');
-        const healthDisplay = document.getElementById('health');
-        const sandwich = document.getElementById('sandwich');
+        const highscoreDisplay = document.getElementById('highscore');
         const gameOverScreen = document.getElementById('game-over');
         const finalScoreDisplay = document.getElementById('final-score');
 
         let score = 0;
-        let sandwichHealth = 100;
+        let highscore = 0;
         let isGameOver = false;
-        let pigeons = [];
-        let spawnTimer = null;
-        let gameInterval = null;
 
-        // Web Audio API sound generator
+        // Player Physics variables
+        let playerX = 234;
+        let playerY = 450;
+        let playerVelX = 0;
+        let playerVelY = 0;
+        const gravity = 0.35;
+        const jumpForce = -10.5;
+
+        // Controls state
+        let moveLeft = false;
+        let moveRight = false;
+
+        // Platforms array
+        let platforms = [];
+        let cameraOffsetY = 0;
+        let maxReachedHeight = 0;
+
+        // Web Audio API Sound Generator
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -225,190 +207,197 @@
             osc.connect(gain);
             gain.connect(audioCtx.destination);
 
-            if (type === 'shoo') {
-                osc.type = 'triangle';
+            if (type === 'jump') {
+                osc.type = 'sine';
                 osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.15);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
                 gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.15);
-            } else if (type === 'peck') {
+            } else if (type === 'hit') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-                osc.frequency.linearRampToValueAtTime(50, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.1);
+                osc.stop(audioCtx.currentTime + 0.2);
             }
         }
 
-        // Spawn a new pigeon from a random side outside the container view
-        function spawnPigeon() {
-            if (isGameOver) return;
+        // Handle Keyboard Events
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') moveLeft = true;
+            if (e.code === 'ArrowRight' || e.code === 'KeyD') moveRight = true;
+        });
 
-            const pigeonEl = document.createElement('div');
-            pigeonEl.className = 'pigeon';
-            
-            // SVG Graphic for the pigeon
-            pigeonEl.innerHTML = `
-                <svg viewBox="0 0 60 50" width="50" height="40">
-                    <!-- Body -->
-                    <ellipse cx="30" cy="30" rx="18" ry="12" fill="#94a3b8"/>
-                    <!-- Head -->
-                    <circle cx="42" cy="20" r="8" fill="#64748b"/>
-                    <!-- Beak -->
-                    <polygon points="48,18 56,20 48,22" fill="#f59e0b"/>
-                    <!-- Eye -->
-                    <circle cx="44" cy="18" r="1.5" fill="#000"/>
-                    <!-- Wing -->
-                    <path d="M 20 25 Q 30 15 35 30" fill="#475569"/>
-                    <!-- Feet -->
-                    <line x1="25" y1="42" x2="22" y2="48" stroke="#f59e0b" stroke-width="2"/>
-                    <line x1="35" y1="42" x2="38" y2="48" stroke="#f59e0b" stroke-width="2"/>
-                </svg>
-            `;
+        window.addEventListener('keyup', (e) => {
+            if (e.code === 'ArrowLeft' || e.code === 'KeyA') moveLeft = false;
+            if (e.code === 'ArrowRight' || e.code === 'KeyD') moveRight = false;
+        });
 
-            // Random position along boundaries (left, right, or top)
-            const side = Math.floor(Math.random() * 3);
-            let startX, startY;
+        // Initialize Platforms layout
+        function initPlatforms() {
+            platforms.forEach(p => p.element.remove());
+            platforms = [];
 
-            if (side === 0) { // Left
-                startX = -60;
-                startY = Math.random() * 350 + 50;
-            } else if (side === 1) { // Right
-                startX = 820;
-                startY = Math.random() * 350 + 50;
-            } else { // Top
-                startX = Math.random() * 700 + 50;
-                startY = -50;
+            // Starting safe platform underneath the player
+            createPlatform(210, 500, false);
+
+            // Generate upper platforms
+            for (let y = 420; y > -2000; y -= 75) {
+                let x = Math.random() * 420;
+                let isStorm = Math.random() < 0.22 && y < 100; // 22% chance of storm cloud higher up
+                createPlatform(x, y, isStorm);
             }
+        }
 
-            let pX = startX;
-            let pY = startY;
+        function createPlatform(x, y, isStorm) {
+            const el = document.createElement('div');
+            el.className = isStorm ? 'storm-cloud' : 'cloud';
+            container.appendChild(el);
 
-            // Target is the center sandwich zone
-            const targetX = 375;
-            const targetY = 320;
-
-            const speed = 1.2 + Math.random() * 1.5; // Random speeds
-
-            container.appendChild(pigeonEl);
-
-            const pigeonObj = {
-                element: pigeonEl,
-                x: pX,
-                y: pY,
-                update: function() {
-                    const dx = targetX - this.x;
-                    const dy = targetY - this.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < 40) {
-                        // Reached the sandwich! Deal damage
-                        sandwichHealth -= 0.5;
-                        healthDisplay.innerText = Math.max(0, Math.floor(sandwichHealth));
-                        
-                        // Shake sandwich animation
-                        sandwich.style.transform = `scale(${1 + Math.random() * 0.3}) rotate(${(Math.random() - 0.5) * 20}deg)`;
-                        playSound('peck');
-
-                        if (sandwichHealth <= 0) {
-                            triggerGameOver();
-                        }
-                        return false; // Remove pigeon
-                    }
-
-                    // Move towards target
-                    this.x += (dx / dist) * speed;
-                    this.y += (dy / dist) * speed;
-
-                    this.element.style.left = this.x + 'px';
-                    this.element.style.top = this.y + 'px';
-
-                    // Face orientation
-                    if (dx < 0) {
-                        this.element.style.transform = 'scaleX(-1)';
-                    } else {
-                        this.element.style.transform = 'scaleX(1)';
-                    }
-
-                    return true;
-                }
-            };
-
-            // Click event to shoo pigeon away
-            pigeonEl.addEventListener('mousedown', (e) => {
-                e.stopPropagation();
-                if (isGameOver) return;
-                
-                playSound('shoo');
-                createFeathers(pigeonObj.x, pigeonObj.y);
-                pigeonEl.remove();
-                
-                // Remove from active array
-                pigeons = pigeons.filter(p => p !== pigeonObj);
-
-                score++;
-                scoreDisplay.innerText = score;
+            platforms.push({
+                x: x,
+                y: y,
+                isStorm: isStorm,
+                element: el
             });
-
-            pigeons.push(pigeonObj);
         }
 
-        // Feather explosion effect on click
-        function createFeathers(x, y) {
-            for (let i = 0; i < 5; i++) {
-                const feather = document.createElement('div');
-                feather.className = 'feather';
-                feather.style.left = (x + 25) + 'px';
-                feather.style.top = (y + 20) + 'px';
-                
-                const dx = (Math.random() - 0.5) * 100 + 'px';
-                const dy = (Math.random() - 0.5) * 100 + 'px';
-                feather.style.setProperty('--dx', dx);
-                feather.style.setProperty('--dy', dy);
-
-                container.appendChild(feather);
-                setTimeout(() => feather.remove(), 500);
+        function createDust(x, y) {
+            for (let i = 0; i < 3; i++) {
+                const dust = document.createElement('div');
+                dust.className = 'dust';
+                dust.style.left = (x + Math.random() * 24) + 'px';
+                dust.style.top = (y + 28) + 'px';
+                container.appendChild(dust);
+                setTimeout(() => dust.remove(), 400);
             }
         }
 
+        // Main game loop running at 60 FPS
         function gameLoop() {
             if (isGameOver) return;
-            
-            // Update all active pigeons
-            pigeons = pigeons.filter(p => p.update());
+
+            // Horizontal steering
+            if (moveLeft) playerVelX = -4.5;
+            else if (moveRight) playerVelX = 4.5;
+            else playerVelX *= 0.8; // Friction deceleration
+
+            playerX += playerVelX;
+
+            // Screen wrapping horizontally (wrap around sides)
+            if (playerX < -32) playerX = 500;
+            if (playerX > 500) playerX = -32;
+
+            // Apply gravity vertically
+            playerVelY += gravity;
+            playerY += playerVelY;
+
+            // Camera tracking: If player jumps past the middle point, scroll the world down!
+            if (playerY < 300) {
+                let diff = 300 - playerY;
+                playerY = 300;
+                cameraOffsetY += diff;
+
+                // Shift all platforms downward
+                platforms.forEach(p => {
+                    p.y += diff;
+                });
+
+                // Generate new platforms at the top as you scale higher
+                let highestPlatformY = Math.min(...platforms.map(p => p.y));
+                if (highestPlatformY > -50) {
+                    createPlatform(Math.random() * 420, highestPlatformY - 75, Math.random() < 0.28);
+                }
+
+                // Update height score
+                maxReachedHeight += Math.floor(diff);
+                score = Math.floor(maxReachedHeight / 10);
+                scoreDisplay.innerText = score;
+            }
+
+            // Platform collision detection (only bounce when falling downwards)
+            if (playerVelY > 0) {
+                platforms.forEach(p => {
+                    // Check bounding boxes
+                    if (
+                        playerX + 24 > p.x &&
+                        playerX < p.x + 80 &&
+                        playerY + 32 >= p.y &&
+                        playerY + 32 <= p.y + 16
+                    ) {
+                        if (p.isStorm) {
+                            // Red cloud penalty / bounce down
+                            playSound('hit');
+                            playerVelY = -6;
+                        } else {
+                            // Normal cloud jump bounce
+                            playSound('jump');
+                            playerVelY = jumpForce;
+                            createDust(playerX, playerY);
+                        }
+                    }
+                });
+            }
+
+            // Clean up platforms that fall off the bottom of the screen
+            platforms.forEach(p => {
+                if (p.y > 680) {
+                    p.element.remove();
+                }
+            });
+            platforms = platforms.filter(p => p.y <= 680);
+
+            // Check Game Over (Fell below the bottom boundary)
+            if (playerY > 660) {
+                triggerGameOver();
+            }
+
+            // Render positions on screen
+            playerEl.style.left = playerX + 'px';
+            playerEl.style.top = playerY + 'px';
+
+            platforms.forEach(p => {
+                p.element.style.left = p.x + 'px';
+                p.element.style.top = p.y + 'px';
+            });
         }
 
         function triggerGameOver() {
             isGameOver = true;
             clearInterval(gameInterval);
-            clearInterval(spawnTimer);
-            pigeons.forEach(p => p.element.remove());
-            pigeons = [];
 
-            finalScoreDisplay.innerText = `You managed to shoo away ${score} pigeons before your sandwich fell!`;
+            if (score > highscore) {
+                highscore = score;
+                highscoreDisplay.innerText = highscore;
+            }
+
+            finalScoreDisplay.innerText = `You reached a height of ${score} meters!`;
             gameOverScreen.style.display = 'flex';
         }
 
         function restartGame() {
-            score = 0;
-            sandwichHealth = 100;
-            scoreDisplay.innerText = 0;
-            healthDisplay.innerText = 100;
             isGameOver = false;
+            score = 0;
+            maxReachedHeight = 0;
+            scoreDisplay.innerText = 0;
+            playerX = 234;
+            playerY = 400;
+            playerVelX = 0;
+            playerVelY = -8;
+            cameraOffsetY = 0;
             gameOverScreen.style.display = 'none';
 
+            initPlatforms();
             clearInterval(gameInterval);
-            clearInterval(spawnTimer);
-
             gameInterval = setInterval(gameLoop, 1000 / 60);
-            spawnTimer = setInterval(spawnPigeon, 1200); // Spawn new pigeon every 1.2 seconds
         }
 
-        // Start initialization
+        // Initialize game start
+        let gameInterval = null;
         restartGame();
     </script>
 </body>
