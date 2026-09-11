@@ -1,495 +1,488 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Word Wizard's Bouncing Cauldron</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Alex — Designer for the Web</title>
+<meta name="description" content="A playful portfolio for a designer and creative developer.">
 
-        body {
-            margin: 0;
-            padding: 0;
-            background: #0f172a;
-            color: #ffffff;
-            font-family: 'Comic Sans MS', 'Bubblegum Sans', 'Segoe UI', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            overflow: hidden;
-        }
+<style> /* ========================================================= DESIGN SYSTEM ========================================================= */ :root { --bg: #f4f1e9; --text: #151515; --muted: #706d66; --line: rgba(21,21,21,.2); --red: #e64b36; --yellow: #f2c94c; --blue: #5579a7; --green: #7b966e; --purple: #8c789e; --page: min(1400px, calc(100vw - 80px)); } * { box-sizing: border-box; } html { scroll-behavior: smooth; } body { margin: 0; background: var(--bg); color: var(--text); font-family: Arial, Helvetica, sans-serif; transition: background .45s ease, color .45s ease; overflow-x: hidden; } a { color: inherit; text-decoration: none; } button { font: inherit; } ::selection { background: var(--red); color: white; } /* ========================================================= DARK MODE ========================================================= */ body.dark { --bg: #171717; --text: #f3eee4; --muted: #a39d92; --line: rgba(243,238,228,.25); } body.dark .work-card { color: #171717; } body.dark .cursor { mix-blend-mode: difference; } /* ========================================================= PAGE ========================================================= */ .container { width: var(--page); margin: 0 auto; } /* ========================================================= HEADER ========================================================= */ header { position: relative; z-index: 100; } .header { height: 76px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); } .logo { font-size: 14px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; } .logo span { color: var(--red); } .nav { display: flex; align-items: center; gap: 25px; } .nav a { position: relative; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; } .nav a::after { content: ""; position: absolute; height: 2px; left: 0; right: 100%; bottom: -6px; background: currentColor; transition: right .3s ease; } .nav a:hover::after { right: 0; } .version { font-size: 11px; color: var(--muted); letter-spacing: .1em; } .theme { width: 32px; height: 32px; border: 1px solid currentColor; border-radius: 50%; background: transparent; cursor: pointer; display: grid; place-items: center; transition: transform .3s ease, background .3s ease; } .theme:hover { transform: rotate(25deg); } /* ========================================================= HERO ========================================================= */ .hero { min-height: 780px; position: relative; display: flex; align-items: center; border-bottom: 1px solid var(--line); overflow: hidden; } .hero-content { position: relative; z-index: 5; } .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 38px; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; } .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--red); } .hero-title { margin: 0; font-size: clamp(90px, 16vw, 220px); font-weight: 900; letter-spacing: -.085em; line-height: .73; text-transform: uppercase; } .hero-title .second { color: var(--red); margin-left: 9vw; } .hero-description { width: min(500px, 90%); margin: 70px 0 0 9vw; font-size: clamp(19px, 2.1vw, 29px); line-height: 1.25; letter-spacing: -.035em; } /* ========================================================= HERO ART ========================================================= */ .hero-graphic { position: absolute; width: min(48vw, 620px); aspect-ratio: 1; right: -3%; bottom: -6%; animation: heroFloat 8s ease-in-out infinite; } @keyframes heroFloat { 0%,100% { transform: rotate(8deg) translateY(0); } 50% { transform: rotate(12deg) translateY(-20px); } } .blob { position: absolute; } .blob.red { width: 52%; height: 52%; right: 10%; top: 13%; background: var(--red); border-radius: 52% 48% 38% 62%; } .blob.yellow { width: 47%; height: 47%; left: 10%; bottom: 11%; background: var(--yellow); border-radius: 50%; mix-blend-mode: multiply; } .blob.blue { width: 36%; height: 36%; left: 30%; top: 31%; background: var(--blue); border-radius: 48% 52% 60% 40%; mix-blend-mode: multiply; } .blob.green { width: 17%; height: 17%; right: 7%; bottom: 10%; background: var(--green); border-radius: 50%; } .blob.black { width: 12%; height: 12%; left: 14%; top: 18%; background: var(--text); border-radius: 50%; } /* ========================================================= INTRO ========================================================= */ .intro { display: grid; grid-template-columns: 1fr 2fr; padding: 85px 0; border-bottom: 1px solid var(--line); } .label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; } .intro-copy { max-width: 900px; font-size: clamp(31px, 4.2vw, 62px); line-height: .98; letter-spacing: -.055em; } .red { color: var(--red); } /* ========================================================= SECTIONS ========================================================= */ section.content { padding: 140px 0; } .section-title { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 55px; padding-bottom: 18px; border-bottom: 1px solid var(--line); } .section-title h2 { margin: 0; font-size: clamp(55px, 8vw, 110px); line-height: .8; letter-spacing: -.075em; } .section-title span { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; } /* ========================================================= WORK ========================================================= */ .work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; } .work-card { min-height: 490px; padding: 24px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform .5s cubic-bezier(.2,.8,.2,1); } .work-card:hover { transform: translateY(-9px); } .card-1 { background: #e9dfce; } .card-2 { background: #d8e0dc; } .card-3 { background: #ead6d1; } .card-4 { background: #ddd8e8; } .card-5 { background: #e9dfbf; } .card-6 { background: #d5e0e7; } .card-number { font-size: 11px; font-weight: 700; letter-spacing: .1em; } .card-art { position: absolute; width: 62%; aspect-ratio: 1; left: 50%; top: 48%; transform: translate(-50%,-50%) rotate(-8deg); transition: transform .65s cubic-bezier(.2,.8,.2,1); } .work-card:hover .card-art { transform: translate(-50%,-50%) rotate(4deg) scale(1.1); } /* Artwork 1 */ .art-1 { background: var(--red); border-radius: 46% 54% 60% 40%; } /* Artwork 2 */ .art-2 { background: var(--blue); border-radius: 50%; box-shadow: 80px -50px 0 var(--yellow), -70px 60px 0 var(--green); } /* Artwork 3 */ .art-3 { border: 28px solid var(--yellow); background: repeating-linear-gradient( 45deg, #171717 0 10px, transparent 10px 22px ); border-radius: 50%; } /* Artwork 4 */ .art-4 { background: var(--green); border-radius: 55% 25% 50% 35%; box-shadow: inset 45px 30px 0 var(--yellow), inset -40px -30px 0 var(--red); } /* Artwork 5 */ .art-5 { background: var(--yellow); clip-path: polygon( 50% 0, 100% 28%, 80% 100%, 20% 100%, 0 28% ); } /* Artwork 6 */ .art-6 { background: var(--blue); border-radius: 50%; border: 30px solid var(--red); box-shadow: 0 0 0 18px var(--yellow); } .card-info { position: relative; z-index: 2; } .card-title { margin: 0; font-size: clamp(42px, 5vw, 70px); line-height: .85; letter-spacing: -.065em; } .card-category { margin-top: 15px; font-size: 10px; text-transform: uppercase; letter-spacing: .13em; } /* ========================================================= ABOUT ========================================================= */ .about { display: grid; grid-template-columns: 1fr 2fr; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 80px 0; } .about-copy { max-width: 900px; font-size: clamp(30px, 4vw, 60px); line-height: 1; letter-spacing: -.055em; } .about-copy p { margin: 0 0 42px; } .about-copy p:last-child { margin-bottom: 0; } /* ========================================================= THOUGHTS ========================================================= */ .thoughts { max-width: 1000px; } .thought { display: grid; grid-template-columns: 100px 1fr; gap: 35px; padding: 27px 0; border-bottom: 1px solid var(--line); } .thought-number { color: var(--muted); font-size: 11px; } .thought a { font-size: clamp(24px, 3vw, 44px); line-height: 1; letter-spacing: -.04em; transition: color .25s ease; } .thought a:hover { color: var(--red); } /* ========================================================= ARCHIVE ========================================================= */ .archive { display: grid; grid-template-columns: repeat(5, 1fr); border-left: 1px solid var(--line); border-top: 1px solid var(--line); } .archive-item { min-height: 160px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; transition: background .3s ease, color .3s ease; } .archive-item:hover { background: var(--text); color: var(--bg); } .archive-year { color: var(--muted); font-size: 11px; } .archive-name { font-size: 28px; letter-spacing: -.04em; } /* ========================================================= FOOTER ========================================================= */ footer { padding: 70px 0 40px; border-top: 1px solid var(--line); } .footer-top { display: flex; justify-content: space-between; gap: 50px; } .footer-title { font-size: clamp(75px, 13vw, 190px); font-weight: 900; line-height: .72; letter-spacing: -.09em; } .footer-links { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; } .footer-links a { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; } .footer-links a:hover { color: var(--red); } .footer-bottom { display: flex; justify-content: space-between; margin-top: 100px; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .13em; } /* ========================================================= REVEAL ANIMATION ========================================================= */ .reveal { opacity: 0; transform: translateY(35px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); } .reveal.visible { opacity: 1; transform: translateY(0); } /* ========================================================= CURSOR ========================================================= */ .cursor { position: fixed; z-index: 1000; width: 12px; height: 12px; background: var(--red); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: width .25s ease, height .25s ease, opacity .25s ease; mix-blend-mode: multiply; } .cursor.large { width: 55px; height: 55px; opacity: .45; } /* ========================================================= RESPONSIVE ========================================================= */ @media (max-width: 850px) { :root { --page: calc(100vw - 40px); } .version { display: none; } .nav { gap: 15px; } .nav a:nth-child(n+3) { display: none; } .hero { min-height: 690px; } .hero-title { font-size: 21vw; } .hero-description { margin-left: 0; } .hero-graphic { width: 75vw; right: -18%; opacity: .65; } .intro, .about { grid-template-columns: 1fr; gap: 40px; } .work-grid { grid-template-columns: 1fr; } .archive { grid-template-columns: repeat(2, 1fr); } .footer-top { flex-direction: column; } .footer-links { align-items: flex-start; } } @media (max-width: 520px) { :root { --page: calc(100vw - 30px); } .header { height: 65px; } .logo { font-size: 11px; } .nav { gap: 10px; } .hero { min-height: 600px; } .hero-title { font-size: 24vw; } .hero-description { margin-top: 45px; font-size: 20px; } .hero-graphic { width: 95vw; right: -35%; bottom: 0; opacity: .48; } section.content { padding: 90px 0; } .section-title { margin-bottom: 35px; } .work-card { min-height: 360px; } .archive { grid-template-columns: 1fr 1fr; } .archive-item { min-height: 120px; } .thought { grid-template-columns: 45px 1fr; gap: 15px; } .footer-title { font-size: 25vw; } .footer-bottom { flex-direction: column; gap: 15px; } } /* ========================================================= TOUCH DEVICES ========================================================= */ @media (hover: none) { .cursor { display: none; } } </style> </head> <body> <!-- ======================================================= CURSOR ======================================================= --> <div class="cursor" id="cursor"></div> <!-- ======================================================= HEADER ======================================================= --> <header> <div class="container header">
+<a href="#" class="logo">
+  Alex <span>Fisher</span>
+</a>
 
-        #game-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            height: 100%;
-            max-height: 750px;
-            background: linear-gradient(to bottom, #311042, #1e1b4b, #0f172a);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 4px solid #a855f7;
-        }
+<nav class="nav">
 
-        /* Top Header UI */
-        .hud {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: rgba(168, 85, 247, 0.2);
-            backdrop-filter: blur(5px);
-            border-bottom: 2px dashed rgba(168, 85, 247, 0.4);
-            z-index: 10;
-        }
+  <a href="#about">About</a>
 
-        .hud-box {
-            background: #3b0764;
-            color: #f3e8ff;
-            padding: 6px 14px;
-            border-radius: 15px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border: 2px solid #c084fc;
-            box-shadow: 0 4px 0 #581c87;
-        }
+  <a href="#work">Work</a>
 
-        /* Word Target Banner */
-        .target-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            z-index: 10;
-        }
+  <a href="#thoughts">Thoughts</a>
 
-        .hint-text {
-            font-size: 1rem;
-            color: #e9d5ff;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(88, 28, 135, 0.6);
-            padding: 6px 16px;
-            border-radius: 12px;
-            border: 1px solid #c084fc;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
+  <a href="#archive">Archive</a>
 
-        .word-display {
-            display: flex;
-            gap: 10px;
-        }
+  <button
+    class="theme"
+    id="theme"
+    aria-label="Toggle dark mode">
+    ◐
+  </button>
 
-        .letter-slot {
-            width: 50px;
-            height: 55px;
-            background: rgba(30, 27, 75, 0.8);
-            border: 3px solid #c084fc;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #6b21a8;
-            box-shadow: inset 0 3px 5px rgba(0,0,0,0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
+</nav>
 
-        .letter-slot.filled {
-            color: #4ade80;
-            border-color: #22c55e;
-            background: #052e16;
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(74, 222, 128, 0.5);
-        }
+<div class="version">
+  v. XX
+</div>
 
-        /* Play Area / Interactive Physics Box */
-        #play-area {
-            position: relative;
-            flex-grow: 1;
-            overflow: hidden;
-            z-index: 5;
-        }
+</div> </header> <main> <!-- ======================================================= HERO ======================================================= --> <section class="container hero"> <div class="hero-content">
+<div class="eyebrow">
+  Designer for the Web
+</div>
 
-        /* Bouncing Interactive Letter Orbs */
-        .orb {
-            position: absolute;
-            width: 65px;
-            height: 65px;
-            background: radial-gradient(circle at 30% 30%, #e879f9, #7e22ce);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: #ffffff;
-            box-shadow: inset -5px -5px 12px rgba(0,0,0,0.4), 0 8px 20px rgba(168,85,247,0.5);
-            cursor: pointer;
-            user-select: none;
-            border: 2px solid #f0abfc;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s;
-        }
+<h1 class="hero-title">
 
-        .orb:active {
-            transform: translate(-50%, -50%) scale(0.85);
-        }
+  <span>Alex</span>
 
-        /* Magic Cauldron Graphic at the bottom */
-        .cauldron-base {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 70px;
-            background: linear-gradient(to top, #18181b, #27272a);
-            border-top: 4px solid #a855f7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            color: #d8b4fe;
-            z-index: 8;
-            box-shadow: 0 -10px 20px rgba(0,0,0,0.5);
-        }
+  <span class="second">
+    Fisher
+  </span>
 
-        /* Success Popup Modal */
-        #success-modal {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            background: #1e1b4b;
-            border: 6px solid #c084fc;
-            padding: 30px;
-            border-radius: 25px;
-            text-align: center;
-            z-index: 20;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 85%;
-            max-width: 350px;
-        }
+</h1>
 
-        #success-modal.show {
-            transform: translate(-50%, -50%) scale(1);
-        }
+<p class="hero-description">
 
-        #success-modal h2 {
-            color: #4ade80;
-            margin: 0 0 10px 0;
-            font-size: 2.2rem;
-        }
+  Designer, developer, illustrator and
+  professional experimenter making
+  strange and useful things for the web.
 
-        .action-btn {
-            background: #9333ea;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border-radius: 15px;
-            cursor: pointer;
-            box-shadow: 0 6px 0 #581c87;
-            font-family: inherit;
-            margin-top: 15px;
-            transition: 0.1s;
-            border: 2px solid #c084fc;
-        }
+</p>
 
-        .action-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #581c87;
-        }
-    </style>
-</head>
-<body>
+</div> <div class="hero-graphic">
+<div class="blob red"></div>
 
-    <div id="game-wrapper">
-        <!-- UI Information panel -->
-        <div class="hud">
-            <div class="hud-box">✨ Magic Points: <span id="score">0</span></div>
-            <div class="hud-box" id="word-category">Animals</div>
-        </div>
+<div class="blob yellow"></div>
 
-        <!-- Target word mapping interface -->
-        <div class="target-section">
-            <div class="hint-text" id="hint-label">Brew the word: CAT</div>
-            <div class="word-display" id="word-slots"></div>
-        </div>
+<div class="blob blue"></div>
 
-        <!-- Interactive Physics Play Area for Bouncing Letters -->
-        <div id="play-area"></div>
+<div class="blob green"></div>
 
-        <!-- Cauldron Footer -->
-        <div class="cauldron-base">🔮 Tap the bouncing orbs in order! 🔮</div>
+<div class="blob black"></div>
 
-        <!-- Success Popup Modal -->
-        <div id="success-modal">
-            <div style="font-size: 4rem; margin-bottom: 5px;" id="modal-emoji">🐱</div>
-            <h2 id="modal-title">Spell Brewed!</h2>
-            <p id="modal-desc" style="color: #e9d5ff; font-size: 1.1rem; margin: 0;">You successfully brewed CAT!</p>
-            <button class="action-btn" onclick="nextWord()">NEXT SPELL 🚀</button>
-        </div>
+</div> </section> <!-- ======================================================= INTRO ======================================================= --> <section class="container intro reveal"> <div class="label"> Hello, web </div> <div class="intro-copy">
+I make websites that feel
+<span class="red">alive</span> —
+playful, thoughtful,
+occasionally weird,
+and always made for humans.
+
+</div> </section> <!-- ======================================================= WORK ======================================================= --> <section class="container content" id="work"> <div class="section-title reveal">
+<h2>Work</h2>
+
+<span>
+  Selected projects
+</span>
+
+</div> <div class="work-grid">
+<a href="#" class="work-card card-1 reveal">
+
+  <div class="card-number">
+    01
+  </div>
+
+  <div class="card-art art-1"></div>
+
+  <div class="card-info">
+
+    <h3 class="card-title">
+      Orbit
+    </h3>
+
+    <div class="card-category">
+      Creative Development
     </div>
 
-    <script>
-        const playArea = document.getElementById('play-area');
-        const wordSlotsEl = document.getElementById('word-slots');
-        const hintLabel = document.getElementById('hint-label');
-        const scoreEl = document.getElementById('score');
-        const successModal = document.getElementById('success-modal');
-        const modalEmoji = document.getElementById('modal-emoji');
-        const modalTitle = document.getElementById('modal-title');
-        const modalDesc = document.getElementById('modal-desc');
+  </div>
 
-        const wordList = [
-            { word: "DOG", hint: "A friendly barking animal", emoji: "🐶", category: "Animals" },
-            { word: "CAT", hint: "A furry pet that meows", emoji: "🐱", category: "Animals" },
-            { word: "STAR", hint: "Twinkles high up at night", emoji: "⭐", category: "Nature" },
-            { word: "MOON", hint: "Shines in the dark night sky", emoji: "🌙", category: "Nature" },
-            { word: "BOOK", hint: "Full of exciting stories", emoji: "📖", category: "School" },
-            { word: "FROG", hint: "Green hopper near the pond", emoji: "🐸", category: "Animals" },
-            { word: "TREE", hint: "Tall plant with green leaves", emoji: "🌳", category: "Nature" }
-        ];
+</a>
 
-        let currentWordObj = null;
-        let currentLetterIndex = 0;
-        let score = 0;
-        let orbs = [];
-        let animationFrameId = null;
 
-        // Sound synthesizer
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playSound(type) {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            try {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+<a href="#" class="work-card card-2 reveal">
 
-                if (type === 'tap') {
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                    osc.frequency.exponentialRampYToValueAtTime ? osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1) : osc.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.1);
-                } else if (type === 'win') {
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.12);
-                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.24);
-                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.4);
-                } else if (type === 'error') {
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-                    osc.frequency.setValueAtTime(90, audioCtx.currentTime + 0.15);
-                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                    gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.15);
-                }
-            } catch(e) {}
-        }
+  <div class="card-number">
+    02
+  </div>
 
-        function loadNewWord() {
-            successModal.classList.remove('show');
-            currentWordObj = wordList[Math.floor(Math.random() * wordList.length)];
-            currentLetterIndex = 0;
-            
-            hintLabel.innerText = `${currentWordObj.category}: ${currentWordObj.hint}`;
-            
-            wordSlotsEl.innerHTML = '';
-            for (let i = 0; i < currentWordObj.word.length; i++) {
-                const slot = document.createElement('div');
-                slot.className = 'letter-slot';
-                slot.innerText = '_';
-                wordSlotsEl.appendChild(slot);
-            }
+  <div class="card-art art-2"></div>
 
-            spawnOrbs();
-        }
+  <div class="card-info">
 
-        function spawnOrbs() {
-            playArea.innerHTML = '';
-            orbs = [];
+    <h3 class="card-title">
+      Archive
+    </h3>
 
-            const targetChar = currentWordObj.word[currentLetterIndex];
-            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            
-            let letters = [targetChar];
-            while(letters.length < 4) {
-                let randChar = alphabet[Math.floor(Math.random() * alphabet.length)];
-                if(!letters.includes(randChar)) letters.push(randChar);
-            }
-            letters.sort(() => Math.random() - 0.5);
+    <div class="card-category">
+      Data + Design
+    </div>
 
-            const rect = playArea.getBoundingClientRect();
-            const width = rect.width || 400;
-            const height = rect.height || 350;
+  </div>
 
-            letters.forEach((char) => {
-                const el = document.createElement('div');
-                el.className = 'orb';
-                el.innerText = char;
+</a>
 
-                let orbData = {
-                    element: el,
-                    char: char,
-                    x: Math.random() * (width - 100) + 50,
-                    y: Math.random() * (height - 150) + 50,
-                    vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4,
-                    radius: 325
-                };
 
-                el.onclick = () => handleOrbTap(orbData);
-                playArea.appendChild(el);
-                orbs.push(orbData);
-            });
+<a href="#" class="work-card card-3 reveal">
 
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            physicsLoop();
-        }
+  <div class="card-number">
+    03
+  </div>
 
-        // Real-time bouncing physics engine loop for maximum interactivity
-        function physicsLoop() {
-            const rect = playArea.getBoundingClientRect();
-            const width = rect.width || 400;
-            const height = rect.height || 350;
+  <div class="card-art art-3"></div>
 
-            orbs.forEach(orb => {
-                orb.x += orb.vx;
-                orb.y += orb.vy;
+  <div class="card-info">
 
-                // Wall boundary checks with bounce
-                if (orb.x < 35 || orb.x > width - 35) {
-                    orb.vx *= -1;
-                    orb.x = Math.max(35, Math.min(width - 35, orb.x));
-                }
-                if (orb.y < 35 || orb.y > height - 60) {
-                    orb.vy *= -1;
-                    orb.y = Math.max(35, Math.min(height - 60, orb.y));
-                }
+    <h3 class="card-title">
+      Single Div
+    </h3>
 
-                orb.element.style.left = orb.x + 'px';
-                orb.element.style.top = orb.y + 'px';
-            });
+    <div class="card-category">
+      CSS Experiment
+    </div>
 
-            animationFrameId = requestAnimationFrame(physicsLoop);
-        }
+  </div>
 
-        function handleOrbTap(orbData) {
-            const expectedChar = currentWordObj.word[currentLetterIndex];
+</a>
 
-            if (orbData.char === expectedChar) {
-                playSound('tap');
-                
-                // Remove tapped orb from physics array and DOM
-                orbs = orbs.filter(o => o !== orbData);
-                orbData.element.remove();
 
-                const slots = wordSlotsEl.children;
-                slots[currentLetterIndex].innerText = orbData.char;
-                slots[currentLetterIndex].classList.add('filled');
+<a href="#" class="work-card card-4 reveal">
 
-                currentLetterIndex++;
+  <div class="card-number">
+    04
+  </div>
 
-                if (currentLetterIndex >= currentWordObj.word.length) {
-                    cancelAnimationFrame(animationFrameId);
-                    score += 15;
-                    scoreEl.innerText = score;
-                    playSound('win');
-                    showSuccessPopup();
-                } else {
-                    // Respawn remaining/new bouncing letters dynamically
-                    spawnRemainingOrbs();
-                }
-            } else {
-                playSound('error');
-                orbData.element.style.transform = 'translate(-50%, -50%) scale(0.7)';
-                setTimeout(() => {
-                    orbData.element.style.transform = 'translate(-50%, -50%) scale(1)';
-                }, 150);
-            }
-        }
+  <div class="card-art art-4"></div>
 
-        function spawnRemainingOrbs() {
-            const targetChar = currentWordObj.word[currentLetterIndex];
-            const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-            
-            let letters = [targetChar];
-            while(letters.length < 3) {
-                let randChar = alphabet[Math.floor(Math.random() * alphabet.length)];
-                if(!letters.includes(randChar) && !currentWordObj.word.includes(randChar)) {
-                    letters.push(randChar);
-                }
-            }
-            letters.sort(() => Math.random() - 0.5);
+  <div class="card-info">
 
-            // Clear old orbs and spawn new batch for the next letter
-            playArea.innerHTML = '';
-            orbs = [];
+    <h3 class="card-title">
+      Atlas
+    </h3>
 
-            const rect = playArea.getBoundingClientRect();
-            const width = rect.width || 400;
-            const height = rect.height || 350;
+    <div class="card-category">
+      Interactive Web
+    </div>
 
-            letters.forEach((char) => {
-                const el = document.createElement('div');
-                el.className = 'orb';
-                el.innerText = char;
+  </div>
 
-                let orbData = {
-                    element: el,
-                    char: char,
-                    x: Math.random() * (width - 100) + 50,
-                    y: Math.random() * (height - 150) + 50,
-                    vx: (Math.random() - 0.5) * 4.5,
-                    vy: (Math.random() - 0.5) * 4.5
-                };
+</a>
 
-                el.onclick = () => handleOrbTap(orbData);
-                playArea.appendChild(el);
-                orbs.push(orbData);
-            });
-        }
 
-        function showSuccessPopup() {
-            modalEmoji.innerText = currentWordObj.emoji;
-            modalTitle.innerText = "Magical!";
-            modalDesc.innerText = `You successfully brewed ${currentWordObj.word}!`;
-            successModal.classList.add('show');
-        }
+<a href="#" class="work-card card-5 reveal">
 
-        function nextWord() {
-            loadNewWord();
-        }
+  <div class="card-number">
+    05
+  </div>
 
-        loadNewWord();
-    </script>
-</body>
-</html>
+  <div class="card-art art-5"></div>
+
+  <div class="card-info">
+
+    <h3 class="card-title">
+      Studio
+    </h3>
+
+    <div class="card-category">
+      Brand + Web
+    </div>
+
+  </div>
+
+</a>
+
+
+<a href="#" class="work-card card-6 reveal">
+
+  <div class="card-number">
+    06
+  </div>
+
+  <div class="card-art art-6"></div>
+
+  <div class="card-info">
+
+    <h3 class="card-title">
+      Signal
+    </h3>
+
+    <div class="card-category">
+      Digital Product
+    </div>
+
+  </div>
+
+</a>
+
+</div> </section> <!-- ======================================================= ABOUT ======================================================= --> <section class="container content" id="about"> <div class="about reveal">
+<div class="label">
+  About
+</div>
+
+<div class="about-copy">
+
+  <p>
+    Hey! I'm Alex — a designer and
+    creative developer who thinks
+    the browser is a
+    <span class="red">creative medium.</span>
+  </p>
+
+  <p>
+    I enjoy making things that are
+    useful, expressive, accessible,
+    and just a little unexpected.
+  </p>
+
+</div>
+
+</div> </section> <!-- ======================================================= THOUGHTS ======================================================= --> <section class="container content" id="thoughts"> <div class="section-title reveal">
+<h2>Thoughts</h2>
+
+<span>
+  Notes from the studio
+</span>
+
+</div> <div class="thoughts">
+<div class="thought reveal">
+
+  <div class="thought-number">
+    01
+  </div>
+
+  <a href="#">
+    Why the browser is still
+    the most interesting
+    creative tool →
+  </a>
+
+</div>
+
+
+<div class="thought reveal">
+
+  <div class="thought-number">
+    02
+  </div>
+
+  <a href="#">
+    Designing interfaces
+    that don't feel like
+    interfaces →
+  </a>
+
+</div>
+
+
+<div class="thought reveal">
+
+  <div class="thought-number">
+    03
+  </div>
+
+  <a href="#">
+    A small collection
+    of CSS experiments →
+  </a>
+
+</div>
+
+
+<div class="thought reveal">
+
+  <div class="thought-number">
+    04
+  </div>
+
+  <a href="#">
+    Making websites
+    that remember →
+  </a>
+
+</div>
+
+</div> </section> <!-- ======================================================= ARCHIVE ======================================================= --> <section class="container content" id="archive"> <div class="section-title reveal">
+<h2>Archive</h2>
+
+<span>
+  Previous versions
+</span>
+
+</div> <div class="archive reveal">
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2026
+  </span>
+
+  <span class="archive-name">
+    v. XX
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2025
+  </span>
+
+  <span class="archive-name">
+    v. XIX
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2024
+  </span>
+
+  <span class="archive-name">
+    v. XVIII
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2023
+  </span>
+
+  <span class="archive-name">
+    v. XVII
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2022
+  </span>
+
+  <span class="archive-name">
+    v. XVI
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2021
+  </span>
+
+  <span class="archive-name">
+    v. XV
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2020
+  </span>
+
+  <span class="archive-name">
+    v. XIV
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2019
+  </span>
+
+  <span class="archive-name">
+    v. XIII
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2018
+  </span>
+
+  <span class="archive-name">
+    v. XII
+  </span>
+
+</a>
+
+
+<a href="#" class="archive-item">
+
+  <span class="archive-year">
+    2017
+  </span>
+
+  <span class="archive-name">
+    v. XI
+  </span>
+
+</a>
+
+</div> </section> </main> <!-- ======================================================= FOOTER ======================================================= --> <footer> <div class="container">
+<div class="footer-top">
+
+  <div class="footer-title">
+    hello!
+  </div>
+
+  <div class="footer-links">
+
+    <a href="mailto:hello@example.com">
+      Email
+    </a>
+
+    <a href="#">
+      GitHub
+    </a>
+
+    <a href="#">
+      Instagram
+    </a>
+
+    <a href="#">
+      LinkedIn
+    </a>
+
+    <a href="#">
+      RSS
+    </a>
+
+  </div>
+
+</div>
+
+
+<div class="footer-bottom">
+
+  <span>
+    Made with HTML, CSS & curiosity
+  </span>
+
+  <span>
+    © 2026 Alex
+  </span>
+
+</div>
+
+</div> </footer> <script> /* ========================================================= DARK MODE ========================================================= */ const theme = document.getElementById("theme"); theme.addEventListener("click", () => { document.body.classList.toggle("dark"); localStorage.setItem( "theme", document.body.classList.contains("dark") ? "dark" : "light" ); }); if ( localStorage.getItem("theme") === "dark" ) { document.body.classList.add("dark"); } /* ========================================================= SCROLL REVEALS ========================================================= */ const revealElements = document.querySelectorAll(".reveal"); const observer = new IntersectionObserver( entries => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add( "visible" ); observer.unobserve( entry.target ); } }); }, { threshold: .12 } ); revealElements.forEach(element => { observer.observe(element); }); /* ========================================================= CUSTOM CURSOR ========================================================= */ const cursor = document.getElementById("cursor"); let mouseX = 0; let mouseY = 0; let currentX = 0; let currentY = 0; document.addEventListener( "mousemove", event => { mouseX = event.clientX; mouseY = event.clientY; } ); function animateCursor() { currentX += (mouseX - currentX) * .16; currentY += (mouseY - currentY) * .16; cursor.style.left = currentX + "px"; cursor.style.top = currentY + "px"; requestAnimationFrame( animateCursor ); } animateCursor(); /* ========================================================= CURSOR HOVER ========================================================= */ document .querySelectorAll("a, button, .work-card") .forEach(element => { element.addEventListener( "mouseenter", () => { cursor.classList.add( "large" ); } ); element.addEventListener( "mouseleave", () => { cursor.classList.remove( "large" ); } ); }); /* ========================================================= PROJECT TILT ========================================================= */ document .querySelectorAll(".work-card") .forEach(card => { card.addEventListener( "mousemove", event => { const rect = card.getBoundingClientRect(); const x = (event.clientX - rect.left) / rect.width - .5; const y = (event.clientY - rect.top) / rect.height - .5; card.style.transform = `perspective(900px) rotateX(${y * -3}deg) rotateY(${x * 3}deg) translateY(-8px)`; } ); card.addEventListener( "mouseleave", () => { card.style.transform = ""; } ); }); /* ========================================================= KEYBOARD SHORTCUT ========================================================= */ document.addEventListener( "keydown", event => { if ( event.key.toLowerCase() === "d" ) { theme.click(); } } ); </script> </body> </html>
