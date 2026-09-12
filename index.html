@@ -1,245 +1,10 @@
-/**
- * Interactive Portfolio Script for Bishow Poudel - Supply Chain Pharmacist
- * This script dynamically generates and handles the interactive features of the portfolio,
- * including profile data, a medicine blog section, and utility widgets (Clock & BMI Calculator).
- */
-
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Inject Portfolio Styles
-    injectStyles();
-
-    // 2. Build Main Layout & Sections
-    const app = document.getElementById('app') || document.body;
-    app.innerHTML = `
-        <div class="portfolio-container">
-            <!-- Header & Navigation -->
-            <header class="portfolio-header">
-                <div class="header-content">
-                    <h1>Bishow Poudel</h1>
-                    <p class="subtitle">Supply Chain Pharmacist & Public Health Professional</p>
-                    <nav class="portfolio-nav">
-                        <button class="nav-btn active" data-target="about-section">About</button>
-                        <button class="nav-btn" data-target="blog-section">Medicine Blog</button>
-                        <button class="nav-btn" data-target="utilities-section">Utilities & Tools</button>
-                    </nav>
-                </div>
-            </header>
-
-            <!-- Main Content Area -->
-            <main class="portfolio-main">
-                <!-- About Section -->
-                <section id="about-section" class="content-section active">
-                    <div class="card">
-                        <h2>Professional Profile</h2>
-                        <p>
-                            Dedicated and results-driven Pharmacist specializing in pharmaceutical supply chain management, 
-                            public health logistics, and drug distribution systems. Experienced in monitoring inventory, 
-                            enhancing stock visibility, and ensuring the seamless flow of essential medicines across healthcare networks.
-                        </p>
-                        <div class="skills-grid">
-                            <span class="skill-tag">Supply Chain Logistics</span>
-                            <span class="skill-tag">Pharmaceutical Formulation</span>
-                            <span class="skill-tag">Inventory & Data Management</span>
-                            <span class="skill-tag">Public Health</span>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Medicine Blog Section -->
-                <section id="blog-section" class="content-section">
-                    <h2>Medicine & Pharmacy Insights</h2>
-                    <p class="section-desc">Explore articles on pharmaceutical stability, supply chain optimization, and rational drug use.</p>
-                    <div id="blog-grid" class="blog-grid">
-                        <!-- Blog posts will be dynamically loaded here -->
-                    </div>
-                </section>
-
-                <!-- Utilities Section (Clock & BMI Calculator) -->
-                <section id="utilities-section" class="content-section">
-                    <h2>Pharmacist Utilities & Calculators</h2>
-                    <div class="utilities-grid">
-                        <!-- Date & Time Clock Widget -->
-                        <div class="utility-card">
-                            <h3>Live Digital Clock</h3>
-                            <div id="live-clock" class="clock-display">00:00:00</div>
-                            <div id="live-date" class="date-display">Loading date...</div>
-                        </div>
-
-                        <!-- BMI Calculator Widget -->
-                        <div class="utility-card">
-                            <h3>BMI Calculator</h3>
-                            <form id="bmi-form" class="bmi-form">
-                                <div class="form-group">
-                                    <label for="bmi-weight">Weight (kg):</label>
-                                    <input type="number" id="bmi-weight" step="0.1" placeholder="e.g., 70" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="bmi-height">Height (cm):</label>
-                                    <input type="number" id="bmi-height" step="0.1" placeholder="e.g., 175" required>
-                                </div>
-                                <button type="submit" class="action-btn">Calculate BMI</button>
-                            </form>
-                            <div id="bmi-result" class="bmi-result hidden"></div>
-                        </div>
-                    </div>
-                </section>
-            </main>
-
-            <!-- Footer -->
-            <footer class="portfolio-footer">
-                <p>&copy; ${new Date().getFullYear()} Bishow Poudel. All rights reserved.</p>
-            </footer>
-        </div>
-    `;
-
-    // 3. Initialize Interactive Behaviors
-    initNavigation();
-    initBlogSection();
-    initClock();
-    initBmiCalculator();
-});
-
-/**
- * Handles Tab Navigation between sections
- */
-function initNavigation() {
-    const navButtons = document.querySelectorAll('.nav-btn');
-    const sections = document.querySelectorAll('.content-section');
-
-    navButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetId = button.getAttribute('data-target');
-
-            // Update active state on buttons
-            navButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            // Show target section, hide others
-            sections.forEach(section => {
-                if (section.id === targetId) {
-                    section.classList.add('active');
-                } else {
-                    section.classList.remove('active');
-                }
-            });
-        });
-    });
-}
-
-/**
- * Loads and renders dynamic medicine blog posts
- */
-function initBlogSection() {
-    const blogGrid = document.getElementById('blog-grid');
-    
-    const blogPosts = [
-        {
-            title: "Optimizing Cold Chain Logistics in Resource-Limited Settings",
-            date: "May 14, 2026",
-            snippet: "An examination of temperature-controlled supply chain strategies to preserve vaccine and biologic potency from central warehouses to peripheral health posts.",
-            category: "Supply Chain"
-        },
-        {
-            title: "Understanding Drug Stability and Excipient Selection",
-            date: "April 28, 2026",
-            snippet: "A technical breakdown of how formulation excipients impact active pharmaceutical ingredient (API) shelf-life and degradation pathways under varying climatic conditions.",
-            category: "Pharmaceutical Formulation"
-        },
-        {
-            title: "Streamlining Consumption Tracking Across 97 Health Facilities",
-            date: "March 10, 2026",
-            snippet: "Best practices for utilizing standardized Excel and database templates to minimize stockouts and overstocking across provincial medical inventories.",
-            category: "Data Management"
-        }
-    ];
-
-    blogGrid.innerHTML = blogPosts.map(post => `
-        <article class="blog-card">
-            <span class="blog-category">${post.category}</span>
-            <h3>${post.title}</h3>
-            <span class="blog-date">${post.date}</span>
-            <p>${post.snippet}</p>
-            <button class="read-more-btn" onclick="alert('Full article viewing can be linked to a detailed post page or modal.')">Read More</button>
-        </article>
-    `).join('');
-}
-
-/**
- * Initializes a live real-time clock and date display
- */
-function initClock() {
-    const clockElement = document.getElementById('live-clock');
-    const dateElement = document.getElementById('live-date');
-
-    function updateTime() {
-        const now = new Date();
-        
-        // Time format
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        if (clockElement) clockElement.textContent = `${hours}:${minutes}:${seconds}`;
-
-        // Date format
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        if (dateElement) dateElement.textContent = now.toLocaleDateString(undefined, options);
-    }
-
-    updateTime();
-    setInterval(updateTime, 1000);
-}
-
-/**
- * Handles BMI Calculation logic and evaluation category
- */
-function initBmiCalculator() {
-    const form = document.getElementById('bmi-form');
-    const resultDiv = document.getElementById('bmi-result');
-
-    if (form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const weight = parseFloat(document.getElementById('bmi-weight').value);
-            const heightCm = parseFloat(document.getElementById('bmi-height').value);
-
-            if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
-                resultDiv.textContent = "Please enter valid positive values for weight and height.";
-                resultDiv.className = "bmi-result error";
-                return;
-            }
-
-            const heightM = heightCm / 100;
-            const bmi = (weight / (heightM * heightM)).toFixed(1);
-
-            let category = "";
-            let colorClass = "";
-
-            if (bmi < 18.5) {
-                category = "Underweight";
-                colorClass = "warning";
-            } else if (bmi >= 18.5 && bmi < 25) {
-                category = "Normal weight";
-                colorClass = "success";
-            } else if (bmi >= 25 && bmi < 30) {
-                category = "Overweight";
-                colorClass = "warning";
-            } else {
-                category = "Obese";
-                colorClass = "danger";
-            }
-
-            resultDiv.innerHTML = `Your BMI: <strong>${bmi}</strong> (${category})`;
-            resultDiv.className = `bmi-result ${colorClass}`;
-        });
-    }
-}
-
-/**
- * Injects clean, modern CSS styling for the portfolio components into the document head
- */
-function injectStyles() {
-    const styleTag = document.createElement('style');
-    styleTag.textContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bishow Poudel | Supply Chain Pharmacist</title>
+    <style>
         :root {
             --primary-color: #0d6efd;
             --primary-dark: #0b5ed7;
@@ -465,7 +230,7 @@ function injectStyles() {
             padding: 12px;
             border-radius: 6px;
             text-align: center;
-            font-size: 0.95ngrem;
+            font-size: 0.95rem;
         }
 
         .bmi-result.hidden {
@@ -485,6 +250,234 @@ function injectStyles() {
             margin-top: 40px;
             border-top: 1px solid var(--border-color);
         }
-    `;
-    document.head.appendChild(styleTag);
-}
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <div class="portfolio-container">
+            <!-- Header & Navigation -->
+            <header class="portfolio-header">
+                <div class="header-content">
+                    <h1>Bishow Poudel</h1>
+                    <p class="subtitle">Supply Chain Pharmacist & Public Health Professional</p>
+                    <nav class="portfolio-nav">
+                        <button class="nav-btn active" data-target="about-section">About</button>
+                        <button class="nav-btn" data-target="blog-section">Medicine Blog</button>
+                        <button class="nav-btn" data-target="utilities-section">Utilities & Tools</button>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="portfolio-main">
+                <!-- About Section -->
+                <section id="about-section" class="content-section active">
+                    <div class="card">
+                        <h2>Professional Profile</h2>
+                        <p>
+                            Dedicated and results-driven Pharmacist specializing in pharmaceutical supply chain management, 
+                            public health logistics, and drug distribution systems. Experienced in monitoring inventory, 
+                            enhancing stock visibility, and ensuring the seamless flow of essential medicines across healthcare networks.
+                        </p>
+                        <div class="skills-grid">
+                            <span class="skill-tag">Supply Chain Logistics</span>
+                            <span class="skill-tag">Pharmaceutical Formulation</span>
+                            <span class="skill-tag">Inventory & Data Management</span>
+                            <span class="skill-tag">Public Health</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medicine Blog Section -->
+                <section id="blog-section" class="content-section">
+                    <h2>Medicine & Pharmacy Insights</h2>
+                    <p class="section-desc">Explore articles on pharmaceutical stability, supply chain optimization, and rational drug use.</p>
+                    <div id="blog-grid" class="blog-grid">
+                        <!-- Blog posts dynamically loaded via script -->
+                    </div>
+                </section>
+
+                <!-- Utilities Section (Clock & BMI Calculator) -->
+                <section id="utilities-section" class="content-section">
+                    <h2>Pharmacist Utilities & Calculators</h2>
+                    <div class="utilities-grid">
+                        <!-- Date & Time Clock Widget -->
+                        <div class="utility-card">
+                            <h3>Live Digital Clock</h3>
+                            <div id="live-clock" class="clock-display">00:00:00</div>
+                            <div id="live-date" class="date-display">Loading date...</div>
+                        </div>
+
+                        <!-- BMI Calculator Widget -->
+                        <div class="utility-card">
+                            <h3>BMI Calculator</h3>
+                            <form id="bmi-form" class="bmi-form">
+                                <div class="form-group">
+                                    <label for="bmi-weight">Weight (kg):</label>
+                                    <input type="number" id="bmi-weight" step="0.1" placeholder="e.g., 70" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bmi-height">Height (cm):</label>
+                                    <input type="number" id="bmi-height" step="0.1" placeholder="e.g., 175" required>
+                                </div>
+                                <button type="submit" class="action-btn">Calculate BMI</button>
+                            </form>
+                            <div id="bmi-result" class="bmi-result hidden"></div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <footer class="portfolio-footer">
+                <p>&copy; <span id="current-year"></span> Bishow Poudel. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set footer year
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Initialize Interactive Behaviors
+            initNavigation();
+            initBlogSection();
+            initClock();
+            initBmiCalculator();
+        });
+
+        /**
+         * Handles Tab Navigation between sections
+         */
+        function initNavigation() {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.content-section');
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.getAttribute('data-target');
+
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    sections.forEach(section => {
+                        if (section.id === targetId) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        /**
+         * Loads and renders dynamic medicine blog posts
+         */
+        function initBlogSection() {
+            const blogGrid = document.getElementById('blog-grid');
+            
+            const blogPosts = [
+                {
+                    title: "Optimizing Cold Chain Logistics in Resource-Limited Settings",
+                    date: "May 14, 2026",
+                    snippet: "An examination of temperature-controlled supply chain strategies to preserve vaccine and biologic potency from central warehouses to peripheral health posts.",
+                    category: "Supply Chain"
+                },
+                {
+                    title: "Understanding Drug Stability and Excipient Selection",
+                    date: "April 28, 2026",
+                    snippet: "A technical breakdown of how formulation excipients impact active pharmaceutical ingredient (API) shelf-life and degradation pathways under varying climatic conditions.",
+                    category: "Pharmaceutical Formulation"
+                },
+                {
+                    title: "Streamlining Consumption Tracking Across Health Facilities",
+                    date: "March 10, 2026",
+                    snippet: "Best practices for utilizing standardized Excel and database templates to minimize stockouts and overstocking across provincial medical inventories.",
+                    category: "Data Management"
+                }
+            ];
+
+            blogGrid.innerHTML = blogPosts.map(post => `
+                <article class="blog-card">
+                    <span class="blog-category">${post.category}</span>
+                    <h3>${post.title}</h3>
+                    <span class="blog-date">${post.date}</span>
+                    <p>${post.snippet}</p>
+                    <button class="read-more-btn" onclick="alert('Full article viewing can be linked to a detailed post page or modal.')">Read More</button>
+                </article>
+            `).join('');
+        }
+
+        /**
+         * Initializes a live real-time clock and date display
+         */
+        function initClock() {
+            const clockElement = document.getElementById('live-clock');
+            const dateElement = document.getElementById('live-date');
+
+            function updateTime() {
+                const now = new Date();
+                
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                if (clockElement) clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                if (dateElement) dateElement.textContent = now.toLocaleDateString(undefined, options);
+            }
+
+            updateTime();
+            setInterval(updateTime, 1000);
+        }
+
+        /**
+         * Handles BMI Calculation logic and evaluation category
+         */
+        function initBmiCalculator() {
+            const form = document.getElementById('bmi-form');
+            const resultDiv = document.getElementById('bmi-result');
+
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const weight = parseFloat(document.getElementById('bmi-weight').value);
+                    const heightCm = parseFloat(document.getElementById('bmi-height').value);
+
+                    if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
+                        resultDiv.textContent = "Please enter valid positive values for weight and height.";
+                        resultDiv.className = "bmi-result error";
+                        return;
+                    }
+
+                    const heightM = heightCm / 100;
+                    const bmi = (weight / (heightM * heightM)).toFixed(1);
+
+                    let category = "";
+                    let colorClass = "";
+
+                    if (bmi < 18.5) {
+                        category = "Underweight";
+                        colorClass = "warning";
+                    } else if (bmi >= 18.5 && bmi < 25) {
+                        category = "Normal weight";
+                        colorClass = "success";
+                    } else if (bmi >= 25 && bmi < 30) {
+                        category = "Overweight";
+                        colorClass = "warning";
+                    } else {
+                        category = "Obese";
+                        colorClass = "danger";
+                    }
+
+                    resultDiv.innerHTML = `Your BMI: <strong>${bmi}</strong> (${category})`;
+                    resultDiv.className = `bmi-result ${colorClass}`;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
