@@ -167,6 +167,19 @@
         .read-more-btn:hover {
             text-decoration: underline;
         }
+        .reveal-content {
+           max-height: 0;
+           overflow: hidden;
+           opacity: 0;
+           transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+         }
+
+        .reveal-content.show {
+          max-height: 300px; /* Adjust if your full text is longer */
+          opacity: 1;
+          transition: max-height 0.4s ease-in, opacity 0.4s ease-in;
+         }
+           
 
         .utilities-grid {
             display: grid;
@@ -374,64 +387,69 @@
             });
         }
 
-        /**
-         * Loads and renders dynamic medicine blog posts
-         */
-        function initBlogSection() {
-            const blogGrid = document.getElementById('blog-grid');
-            
-            const blogPosts = [
-                {
-                    title: "Optimizing Cold Chain Logistics in Resource-Limited Settings",
-                    date: "May 14, 2026",
-                    snippet: "An examination of temperature-controlled supply chain strategies to preserve vaccine and biologic potency from central warehouses to peripheral health posts.",
-                    category: "Supply Chain"
-                },
-                {
-                    title: "Understanding Drug Stability and Excipient Selection",
-                    date: "April 28, 2026",
-                    snippet: "A technical breakdown of how formulation excipients impact active pharmaceutical ingredient (API) shelf-life and degradation pathways under varying climatic conditions.",
-                    category: "Pharmaceutical Formulation"
-                },
-                {
-                    title: "Streamlining Consumption Tracking Across Health Facilities",
-                    date: "March 10, 2026",
-                    snippet: "Best practices for utilizing standardized Excel and database templates to minimize stockouts and overstocking across provincial medical inventories.",
-                    category: "Data Management"
-                }
-            ];
-            <div class="reveal-content" id="post-1-details">
-            <p>
-                Maintaining cold chain integrity requires continuous data-logger monitoring and proactive risk assessments at every transfer point. In provincial setups, backup power infrastructure and reliable transport schedules are critical to preventing temperature excursions that compromise therapeutic efficacy.
-            </p>
-        </div>
-
-            blogGrid.innerHTML = blogPosts.map(post => `
-                <article class="blog-card">
-                    <span class="blog-category">${post.category}</span>
-                    <h3>${post.title}</h3>
-                    <span class="blog-date">${post.date}</span>
-                    <p>${post.snippet}</p>
-                    <button class="read-more-btn" onclick="toggleReadMore('post-1-details', this)">Read More</button>
-                 </article>
-
-    <script>
-        function toggleReadMore(contentId, buttonElement) {
-            const content = document.getElementById(contentId);
-            
-            // Toggle the 'show' class on the hidden content container
-            content.classList.toggle('show');
-
-            // Change button text dynamically
-            if (content.classList.contains('show')) {
-                buttonElement.textContent = "Read Less";
-            } else {
-                buttonElement.textContent = "Read More";
-            }
+       /**
+ * Loads and renders dynamic medicine blog posts with interactive read-more toggles
+ */
+function initBlogSection() {
+    const blogGrid = document.getElementById('blog-grid');
+    
+    const blogPosts = [
+        {
+            title: "Optimizing Cold Chain Logistics in Resource-Limited Settings",
+            date: "May 14, 2026",
+            snippet: "An examination of temperature-controlled supply chain strategies to preserve vaccine and biologic potency from central warehouses to peripheral health posts.",
+            fullText: "Maintaining cold chain integrity requires continuous data-logger monitoring and proactive risk assessments at every transfer point. In provincial setups, backup power infrastructure and reliable transport schedules are critical to preventing temperature excursions that compromise therapeutic efficacy.",
+            category: "Supply Chain"
+        },
+        {
+            title: "Understanding Drug Stability and Excipient Selection",
+            date: "April 28, 2026",
+            snippet: "A technical breakdown of how formulation excipients impact active pharmaceutical ingredient (API) shelf-life and degradation pathways under varying climatic conditions.",
+            fullText: "Excipients do more than just add bulk; they dictate pH microenvironments, moisture absorption rates, and photochemical degradation patterns. Choosing the right binder or antioxidant is essential for extending shelf-life in humid climates.",
+            category: "Pharmaceutical Formulation"
+        },
+        {
+            title: "Streamlining Consumption Tracking Across Health Facilities",
+            date: "March 10, 2026",
+            snippet: "Best practices for utilizing standardized Excel and database templates to minimize stockouts and overstocking across provincial medical inventories.",
+            fullText: "Implementing standardized stock-ledger templates allows supply officers to flag consumption anomalies early. Regular stock reconciliation and minimum-maximum stock level reviews prevent emergency stockouts at health posts.",
+            category: "Data Management"
         }
-                
-            `).join('');
-        }
+    ];
+
+    // Map through posts and dynamically assign unique IDs using the index (i)
+    blogGrid.innerHTML = blogPosts.map((post, index) => `
+        <article class="blog-card">
+            <span class="blog-category">${post.category}</span>
+            <h3>${post.title}</h3>
+            <span class="blog-date">${post.date}</span>
+            <p>${post.snippet}</p>
+            
+            <div class="reveal-content" id="post-details-${index}">
+                <p>${post.fullText}</p>
+            </div>
+
+            <button class="read-more-btn" onclick="toggleReadMore('post-details-${index}', this)">Read More</button>
+        </article>
+    `).join('');
+}
+
+/**
+ * Global function to handle the Click-to-Reveal toggle
+ */
+function toggleReadMore(contentId, buttonElement) {
+    const content = document.getElementById(contentId);
+    
+    // Toggle the 'show' class on the target content container
+    content.classList.toggle('show');
+
+    // Change button text dynamically
+    if (content.classList.contains('show')) {
+        buttonElement.textContent = "Read Less";
+    } else {
+        buttonElement.textContent = "Read More";
+    }
+}
 
         /**
          * Initializes a live real-time clock and date display
