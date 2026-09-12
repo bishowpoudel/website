@@ -1,488 +1,490 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Bishow — Designer for the Web</title>
-<meta name="description" content="A playful portfolio for a designer and creative developer.">
-
-<style> /* ========================================================= DESIGN SYSTEM ========================================================= */ :root { --bg: #f4f1e9; --text: #151515; --muted: #706d66; --line: rgba(21,21,21,.2); --red: #e64b36; --yellow: #f2c94c; --blue: #5579a7; --green: #7b966e; --purple: #8c789e; --page: min(1400px, calc(100vw - 80px)); } * { box-sizing: border-box; } html { scroll-behavior: smooth; } body { margin: 0; background: var(--bg); color: var(--text); font-family: Arial, Helvetica, sans-serif; transition: background .45s ease, color .45s ease; overflow-x: hidden; } a { color: inherit; text-decoration: none; } button { font: inherit; } ::selection { background: var(--red); color: white; } /* ========================================================= DARK MODE ========================================================= */ body.dark { --bg: #171717; --text: #f3eee4; --muted: #a39d92; --line: rgba(243,238,228,.25); } body.dark .work-card { color: #171717; } body.dark .cursor { mix-blend-mode: difference; } /* ========================================================= PAGE ========================================================= */ .container { width: var(--page); margin: 0 auto; } /* ========================================================= HEADER ========================================================= */ header { position: relative; z-index: 100; } .header { height: 76px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); } .logo { font-size: 14px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; } .logo span { color: var(--red); } .nav { display: flex; align-items: center; gap: 25px; } .nav a { position: relative; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; } .nav a::after { content: ""; position: absolute; height: 2px; left: 0; right: 100%; bottom: -6px; background: currentColor; transition: right .3s ease; } .nav a:hover::after { right: 0; } .version { font-size: 11px; color: var(--muted); letter-spacing: .1em; } .theme { width: 32px; height: 32px; border: 1px solid currentColor; border-radius: 50%; background: transparent; cursor: pointer; display: grid; place-items: center; transition: transform .3s ease, background .3s ease; } .theme:hover { transform: rotate(25deg); } /* ========================================================= HERO ========================================================= */ .hero { min-height: 780px; position: relative; display: flex; align-items: center; border-bottom: 1px solid var(--line); overflow: hidden; } .hero-content { position: relative; z-index: 5; } .eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 38px; font-size: 12px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; } .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--red); } .hero-title { margin: 0; font-size: clamp(90px, 16vw, 220px); font-weight: 900; letter-spacing: -.085em; line-height: .73; text-transform: uppercase; } .hero-title .second { color: var(--red); margin-left: 9vw; } .hero-description { width: min(500px, 90%); margin: 70px 0 0 9vw; font-size: clamp(19px, 2.1vw, 29px); line-height: 1.25; letter-spacing: -.035em; } /* ========================================================= HERO ART ========================================================= */ .hero-graphic { position: absolute; width: min(48vw, 620px); aspect-ratio: 1; right: -3%; bottom: -6%; animation: heroFloat 8s ease-in-out infinite; } @keyframes heroFloat { 0%,100% { transform: rotate(8deg) translateY(0); } 50% { transform: rotate(12deg) translateY(-20px); } } .blob { position: absolute; } .blob.red { width: 52%; height: 52%; right: 10%; top: 13%; background: var(--red); border-radius: 52% 48% 38% 62%; } .blob.yellow { width: 47%; height: 47%; left: 10%; bottom: 11%; background: var(--yellow); border-radius: 50%; mix-blend-mode: multiply; } .blob.blue { width: 36%; height: 36%; left: 30%; top: 31%; background: var(--blue); border-radius: 48% 52% 60% 40%; mix-blend-mode: multiply; } .blob.green { width: 17%; height: 17%; right: 7%; bottom: 10%; background: var(--green); border-radius: 50%; } .blob.black { width: 12%; height: 12%; left: 14%; top: 18%; background: var(--text); border-radius: 50%; } /* ========================================================= INTRO ========================================================= */ .intro { display: grid; grid-template-columns: 1fr 2fr; padding: 85px 0; border-bottom: 1px solid var(--line); } .label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; } .intro-copy { max-width: 900px; font-size: clamp(31px, 4.2vw, 62px); line-height: .98; letter-spacing: -.055em; } .red { color: var(--red); } /* ========================================================= SECTIONS ========================================================= */ section.content { padding: 140px 0; } .section-title { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 55px; padding-bottom: 18px; border-bottom: 1px solid var(--line); } .section-title h2 { margin: 0; font-size: clamp(55px, 8vw, 110px); line-height: .8; letter-spacing: -.075em; } .section-title span { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; } /* ========================================================= WORK ========================================================= */ .work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; } .work-card { min-height: 490px; padding: 24px; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: transform .5s cubic-bezier(.2,.8,.2,1); } .work-card:hover { transform: translateY(-9px); } .card-1 { background: #e9dfce; } .card-2 { background: #d8e0dc; } .card-3 { background: #ead6d1; } .card-4 { background: #ddd8e8; } .card-5 { background: #e9dfbf; } .card-6 { background: #d5e0e7; } .card-number { font-size: 11px; font-weight: 700; letter-spacing: .1em; } .card-art { position: absolute; width: 62%; aspect-ratio: 1; left: 50%; top: 48%; transform: translate(-50%,-50%) rotate(-8deg); transition: transform .65s cubic-bezier(.2,.8,.2,1); } .work-card:hover .card-art { transform: translate(-50%,-50%) rotate(4deg) scale(1.1); } /* Artwork 1 */ .art-1 { background: var(--red); border-radius: 46% 54% 60% 40%; } /* Artwork 2 */ .art-2 { background: var(--blue); border-radius: 50%; box-shadow: 80px -50px 0 var(--yellow), -70px 60px 0 var(--green); } /* Artwork 3 */ .art-3 { border: 28px solid var(--yellow); background: repeating-linear-gradient( 45deg, #171717 0 10px, transparent 10px 22px ); border-radius: 50%; } /* Artwork 4 */ .art-4 { background: var(--green); border-radius: 55% 25% 50% 35%; box-shadow: inset 45px 30px 0 var(--yellow), inset -40px -30px 0 var(--red); } /* Artwork 5 */ .art-5 { background: var(--yellow); clip-path: polygon( 50% 0, 100% 28%, 80% 100%, 20% 100%, 0 28% ); } /* Artwork 6 */ .art-6 { background: var(--blue); border-radius: 50%; border: 30px solid var(--red); box-shadow: 0 0 0 18px var(--yellow); } .card-info { position: relative; z-index: 2; } .card-title { margin: 0; font-size: clamp(42px, 5vw, 70px); line-height: .85; letter-spacing: -.065em; } .card-category { margin-top: 15px; font-size: 10px; text-transform: uppercase; letter-spacing: .13em; } /* ========================================================= ABOUT ========================================================= */ .about { display: grid; grid-template-columns: 1fr 2fr; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 80px 0; } .about-copy { max-width: 900px; font-size: clamp(30px, 4vw, 60px); line-height: 1; letter-spacing: -.055em; } .about-copy p { margin: 0 0 42px; } .about-copy p:last-child { margin-bottom: 0; } /* ========================================================= THOUGHTS ========================================================= */ .thoughts { max-width: 1000px; } .thought { display: grid; grid-template-columns: 100px 1fr; gap: 35px; padding: 27px 0; border-bottom: 1px solid var(--line); } .thought-number { color: var(--muted); font-size: 11px; } .thought a { font-size: clamp(24px, 3vw, 44px); line-height: 1; letter-spacing: -.04em; transition: color .25s ease; } .thought a:hover { color: var(--red); } /* ========================================================= ARCHIVE ========================================================= */ .archive { display: grid; grid-template-columns: repeat(5, 1fr); border-left: 1px solid var(--line); border-top: 1px solid var(--line); } .archive-item { min-height: 160px; padding: 20px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; flex-direction: column; justify-content: space-between; transition: background .3s ease, color .3s ease; } .archive-item:hover { background: var(--text); color: var(--bg); } .archive-year { color: var(--muted); font-size: 11px; } .archive-name { font-size: 28px; letter-spacing: -.04em; } /* ========================================================= FOOTER ========================================================= */ footer { padding: 70px 0 40px; border-top: 1px solid var(--line); } .footer-top { display: flex; justify-content: space-between; gap: 50px; } .footer-title { font-size: clamp(75px, 13vw, 190px); font-weight: 900; line-height: .72; letter-spacing: -.09em; } .footer-links { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; } .footer-links a { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; } .footer-links a:hover { color: var(--red); } .footer-bottom { display: flex; justify-content: space-between; margin-top: 100px; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .13em; } /* ========================================================= REVEAL ANIMATION ========================================================= */ .reveal { opacity: 0; transform: translateY(35px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); } .reveal.visible { opacity: 1; transform: translateY(0); } /* ========================================================= CURSOR ========================================================= */ .cursor { position: fixed; z-index: 1000; width: 12px; height: 12px; background: var(--red); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); transition: width .25s ease, height .25s ease, opacity .25s ease; mix-blend-mode: multiply; } .cursor.large { width: 55px; height: 55px; opacity: .45; } /* ========================================================= RESPONSIVE ========================================================= */ @media (max-width: 850px) { :root { --page: calc(100vw - 40px); } .version { display: none; } .nav { gap: 15px; } .nav a:nth-child(n+3) { display: none; } .hero { min-height: 690px; } .hero-title { font-size: 21vw; } .hero-description { margin-left: 0; } .hero-graphic { width: 75vw; right: -18%; opacity: .65; } .intro, .about { grid-template-columns: 1fr; gap: 40px; } .work-grid { grid-template-columns: 1fr; } .archive { grid-template-columns: repeat(2, 1fr); } .footer-top { flex-direction: column; } .footer-links { align-items: flex-start; } } @media (max-width: 520px) { :root { --page: calc(100vw - 30px); } .header { height: 65px; } .logo { font-size: 11px; } .nav { gap: 10px; } .hero { min-height: 600px; } .hero-title { font-size: 24vw; } .hero-description { margin-top: 45px; font-size: 20px; } .hero-graphic { width: 95vw; right: -35%; bottom: 0; opacity: .48; } section.content { padding: 90px 0; } .section-title { margin-bottom: 35px; } .work-card { min-height: 360px; } .archive { grid-template-columns: 1fr 1fr; } .archive-item { min-height: 120px; } .thought { grid-template-columns: 45px 1fr; gap: 15px; } .footer-title { font-size: 25vw; } .footer-bottom { flex-direction: column; gap: 15px; } } /* ========================================================= TOUCH DEVICES ========================================================= */ @media (hover: none) { .cursor { display: none; } } </style> </head> <body> <!-- ======================================================= CURSOR ======================================================= --> <div class="cursor" id="cursor"></div> <!-- ======================================================= HEADER ======================================================= --> <header> <div class="container header">
-<a href="#" class="logo">
-  Bishow <span>Poudel</span>
-</a>
-
-<nav class="nav">
-
-  <a href="#about">About</a>
-
-  <a href="#work">Work</a>
-
-  <a href="#thoughts">Thoughts</a>
-
-  <a href="#archive">Archive</a>
-
-  <button
-    class="theme"
-    id="theme"
-    aria-label="Toggle dark mode">
-    ◐
-  </button>
-
-</nav>
-
-<div class="version">
-  v. XX
-</div>
-
-</div> </header> <main> <!-- ======================================================= HERO ======================================================= --> <section class="container hero"> <div class="hero-content">
-<div class="eyebrow">
-  Designer for the Web
-</div>
-
-<h1 class="hero-title">
-
-  <span>Bishow</span>
-
-  <span class="second">
-    Poudel
-  </span>
-
-</h1>
-
-<p class="hero-description">
-
-  Designer, developer, illustrator and
-  professional experimenter making
-  strange and useful things for the web.
-
-</p>
-
-</div> <div class="hero-graphic">
-<div class="blob red"></div>
-
-<div class="blob yellow"></div>
-
-<div class="blob blue"></div>
-
-<div class="blob green"></div>
-
-<div class="blob black"></div>
-
-</div> </section> <!-- ======================================================= INTRO ======================================================= --> <section class="container intro reveal"> <div class="label"> Hello, web </div> <div class="intro-copy">
-I make websites that feel
-<span class="red">alive</span> —
-playful, thoughtful,
-occasionally weird,
-and always made for humans.
-
-</div> </section> <!-- ======================================================= WORK ======================================================= --> <section class="container content" id="work"> <div class="section-title reveal">
-<h2>Work</h2>
-
-<span>
-  Selected projects
-</span>
-
-</div> <div class="work-grid">
-<a href="#" class="work-card card-1 reveal">
-
-  <div class="card-number">
-    01
-  </div>
-
-  <div class="card-art art-1"></div>
-
-  <div class="card-info">
-
-    <h3 class="card-title">
-      Orbit
-    </h3>
-
-    <div class="card-category">
-      Creative Development
-    </div>
-
-  </div>
-
-</a>
-
-
-<a href="#" class="work-card card-2 reveal">
-
-  <div class="card-number">
-    02
-  </div>
-
-  <div class="card-art art-2"></div>
-
-  <div class="card-info">
-
-    <h3 class="card-title">
-      Archive
-    </h3>
-
-    <div class="card-category">
-      Data + Design
-    </div>
-
-  </div>
-
-</a>
-
-
-<a href="#" class="work-card card-3 reveal">
-
-  <div class="card-number">
-    03
-  </div>
-
-  <div class="card-art art-3"></div>
-
-  <div class="card-info">
-
-    <h3 class="card-title">
-      Single Div
-    </h3>
-
-    <div class="card-category">
-      CSS Experiment
-    </div>
-
-  </div>
-
-</a>
-
-
-<a href="#" class="work-card card-4 reveal">
-
-  <div class="card-number">
-    04
-  </div>
-
-  <div class="card-art art-4"></div>
-
-  <div class="card-info">
-
-    <h3 class="card-title">
-      Atlas
-    </h3>
-
-    <div class="card-category">
-      Interactive Web
-    </div>
-
-  </div>
-
-</a>
-
-
-<a href="#" class="work-card card-5 reveal">
-
-  <div class="card-number">
-    05
-  </div>
-
-  <div class="card-art art-5"></div>
-
-  <div class="card-info">
-
-    <h3 class="card-title">
-      Studio
-    </h3>
-
-    <div class="card-category">
-      Brand + Web
-    </div>
-
-  </div>
-
-</a>
-
-
-<a href="#" class="work-card card-6 reveal">
-
-  <div class="card-number">
-    06
-  </div>
-
-  <div class="card-art art-6"></div>
-
-  <div class="card-info">
-
-    <h3 class="card-title">
-      Signal
-    </h3>
-
-    <div class="card-category">
-      Digital Product
-    </div>
-
-  </div>
-
-</a>
-
-</div> </section> <!-- ======================================================= ABOUT ======================================================= --> <section class="container content" id="about"> <div class="about reveal">
-<div class="label">
-  About
-</div>
-
-<div class="about-copy">
-
-  <p>
-    Hey! I'm Bishow — a designer and
-    creative developer who thinks
-    the browser is a
-    <span class="red">creative medium.</span>
-  </p>
-
-  <p>
-    I enjoy making things that are
-    useful, expressive, accessible,
-    and just a little unexpected.
-  </p>
-
-</div>
-
-</div> </section> <!-- ======================================================= THOUGHTS ======================================================= --> <section class="container content" id="thoughts"> <div class="section-title reveal">
-<h2>Thoughts</h2>
-
-<span>
-  Notes from the studio
-</span>
-
-</div> <div class="thoughts">
-<div class="thought reveal">
-
-  <div class="thought-number">
-    01
-  </div>
-
-  <a href="#">
-    Why the browser is still
-    the most interesting
-    creative tool →
-  </a>
-
-</div>
-
-
-<div class="thought reveal">
-
-  <div class="thought-number">
-    02
-  </div>
-
-  <a href="#">
-    Designing interfaces
-    that don't feel like
-    interfaces →
-  </a>
-
-</div>
-
-
-<div class="thought reveal">
-
-  <div class="thought-number">
-    03
-  </div>
-
-  <a href="#">
-    A small collection
-    of CSS experiments →
-  </a>
-
-</div>
-
-
-<div class="thought reveal">
-
-  <div class="thought-number">
-    04
-  </div>
-
-  <a href="#">
-    Making websites
-    that remember →
-  </a>
-
-</div>
-
-</div> </section> <!-- ======================================================= ARCHIVE ======================================================= --> <section class="container content" id="archive"> <div class="section-title reveal">
-<h2>Archive</h2>
-
-<span>
-  Previous versions
-</span>
-
-</div> <div class="archive reveal">
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2026
-  </span>
-
-  <span class="archive-name">
-    v. XX
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2025
-  </span>
-
-  <span class="archive-name">
-    v. XIX
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2024
-  </span>
-
-  <span class="archive-name">
-    v. XVIII
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2023
-  </span>
-
-  <span class="archive-name">
-    v. XVII
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2022
-  </span>
-
-  <span class="archive-name">
-    v. XVI
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2021
-  </span>
-
-  <span class="archive-name">
-    v. XV
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2020
-  </span>
-
-  <span class="archive-name">
-    v. XIV
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2019
-  </span>
-
-  <span class="archive-name">
-    v. XIII
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2018
-  </span>
-
-  <span class="archive-name">
-    v. XII
-  </span>
-
-</a>
-
-
-<a href="#" class="archive-item">
-
-  <span class="archive-year">
-    2017
-  </span>
-
-  <span class="archive-name">
-    v. XI
-  </span>
-
-</a>
-
-</div> </section> </main> <!-- ======================================================= FOOTER ======================================================= --> <footer> <div class="container">
-<div class="footer-top">
-
-  <div class="footer-title">
-    hello!
-  </div>
-
-  <div class="footer-links">
-
-    <a href="mailto:hello@example.com">
-      Email
-    </a>
-
-    <a href="#">
-      GitHub
-    </a>
-
-    <a href="#">
-      Instagram
-    </a>
-
-    <a href="#">
-      LinkedIn
-    </a>
-
-    <a href="#">
-      RSS
-    </a>
-
-  </div>
-
-</div>
-
-
-<div class="footer-bottom">
-
-  <span>
-    Made with HTML, CSS & curiosity
-  </span>
-
-  <span>
-    © 2026 Bishow
-  </span>
-
-</div>
-
-</div> </footer> <script> /* ========================================================= DARK MODE ========================================================= */ const theme = document.getElementById("theme"); theme.addEventListener("click", () => { document.body.classList.toggle("dark"); localStorage.setItem( "theme", document.body.classList.contains("dark") ? "dark" : "light" ); }); if ( localStorage.getItem("theme") === "dark" ) { document.body.classList.add("dark"); } /* ========================================================= SCROLL REVEALS ========================================================= */ const revealElements = document.querySelectorAll(".reveal"); const observer = new IntersectionObserver( entries => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add( "visible" ); observer.unobserve( entry.target ); } }); }, { threshold: .12 } ); revealElements.forEach(element => { observer.observe(element); }); /* ========================================================= CUSTOM CURSOR ========================================================= */ const cursor = document.getElementById("cursor"); let mouseX = 0; let mouseY = 0; let currentX = 0; let currentY = 0; document.addEventListener( "mousemove", event => { mouseX = event.clientX; mouseY = event.clientY; } ); function animateCursor() { currentX += (mouseX - currentX) * .16; currentY += (mouseY - currentY) * .16; cursor.style.left = currentX + "px"; cursor.style.top = currentY + "px"; requestAnimationFrame( animateCursor ); } animateCursor(); /* ========================================================= CURSOR HOVER ========================================================= */ document .querySelectorAll("a, button, .work-card") .forEach(element => { element.addEventListener( "mouseenter", () => { cursor.classList.add( "large" ); } ); element.addEventListener( "mouseleave", () => { cursor.classList.remove( "large" ); } ); }); /* ========================================================= PROJECT TILT ========================================================= */ document .querySelectorAll(".work-card") .forEach(card => { card.addEventListener( "mousemove", event => { const rect = card.getBoundingClientRect(); const x = (event.clientX - rect.left) / rect.width - .5; const y = (event.clientY - rect.top) / rect.height - .5; card.style.transform = `perspective(900px) rotateX(${y * -3}deg) rotateY(${x * 3}deg) translateY(-8px)`; } ); card.addEventListener( "mouseleave", () => { card.style.transform = ""; } ); }); /* ========================================================= KEYBOARD SHORTCUT ========================================================= */ document.addEventListener( "keydown", event => { if ( event.key.toLowerCase() === "d" ) { theme.click(); } } ); </script> </body> </html>
+/**
+ * Interactive Portfolio Script for Bishow Poudel - Supply Chain Pharmacist
+ * This script dynamically generates and handles the interactive features of the portfolio,
+ * including profile data, a medicine blog section, and utility widgets (Clock & BMI Calculator).
+ */
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Inject Portfolio Styles
+    injectStyles();
+
+    // 2. Build Main Layout & Sections
+    const app = document.getElementById('app') || document.body;
+    app.innerHTML = `
+        <div class="portfolio-container">
+            <!-- Header & Navigation -->
+            <header class="portfolio-header">
+                <div class="header-content">
+                    <h1>Bishow Poudel</h1>
+                    <p class="subtitle">Supply Chain Pharmacist & Public Health Professional</p>
+                    <nav class="portfolio-nav">
+                        <button class="nav-btn active" data-target="about-section">About</button>
+                        <button class="nav-btn" data-target="blog-section">Medicine Blog</button>
+                        <button class="nav-btn" data-target="utilities-section">Utilities & Tools</button>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="portfolio-main">
+                <!-- About Section -->
+                <section id="about-section" class="content-section active">
+                    <div class="card">
+                        <h2>Professional Profile</h2>
+                        <p>
+                            Dedicated and results-driven Pharmacist specializing in pharmaceutical supply chain management, 
+                            public health logistics, and drug distribution systems. Experienced in monitoring inventory, 
+                            enhancing stock visibility, and ensuring the seamless flow of essential medicines across healthcare networks.
+                        </p>
+                        <div class="skills-grid">
+                            <span class="skill-tag">Supply Chain Logistics</span>
+                            <span class="skill-tag">Pharmaceutical Formulation</span>
+                            <span class="skill-tag">Inventory & Data Management</span>
+                            <span class="skill-tag">Public Health</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medicine Blog Section -->
+                <section id="blog-section" class="content-section">
+                    <h2>Medicine & Pharmacy Insights</h2>
+                    <p class="section-desc">Explore articles on pharmaceutical stability, supply chain optimization, and rational drug use.</p>
+                    <div id="blog-grid" class="blog-grid">
+                        <!-- Blog posts will be dynamically loaded here -->
+                    </div>
+                </section>
+
+                <!-- Utilities Section (Clock & BMI Calculator) -->
+                <section id="utilities-section" class="content-section">
+                    <h2>Pharmacist Utilities & Calculators</h2>
+                    <div class="utilities-grid">
+                        <!-- Date & Time Clock Widget -->
+                        <div class="utility-card">
+                            <h3>Live Digital Clock</h3>
+                            <div id="live-clock" class="clock-display">00:00:00</div>
+                            <div id="live-date" class="date-display">Loading date...</div>
+                        </div>
+
+                        <!-- BMI Calculator Widget -->
+                        <div class="utility-card">
+                            <h3>BMI Calculator</h3>
+                            <form id="bmi-form" class="bmi-form">
+                                <div class="form-group">
+                                    <label for="bmi-weight">Weight (kg):</label>
+                                    <input type="number" id="bmi-weight" step="0.1" placeholder="e.g., 70" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bmi-height">Height (cm):</label>
+                                    <input type="number" id="bmi-height" step="0.1" placeholder="e.g., 175" required>
+                                </div>
+                                <button type="submit" class="action-btn">Calculate BMI</button>
+                            </form>
+                            <div id="bmi-result" class="bmi-result hidden"></div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Footer -->
+            <footer class="portfolio-footer">
+                <p>&copy; ${new Date().getFullYear()} Bishow Poudel. All rights reserved.</p>
+            </footer>
+        </div>
+    `;
+
+    // 3. Initialize Interactive Behaviors
+    initNavigation();
+    initBlogSection();
+    initClock();
+    initBmiCalculator();
+});
+
+/**
+ * Handles Tab Navigation between sections
+ */
+function initNavigation() {
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.content-section');
+
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+
+            // Update active state on buttons
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Show target section, hide others
+            sections.forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.add('active');
+                } else {
+                    section.classList.remove('active');
+                }
+            });
+        });
+    });
+}
+
+/**
+ * Loads and renders dynamic medicine blog posts
+ */
+function initBlogSection() {
+    const blogGrid = document.getElementById('blog-grid');
+    
+    const blogPosts = [
+        {
+            title: "Optimizing Cold Chain Logistics in Resource-Limited Settings",
+            date: "May 14, 2026",
+            snippet: "An examination of temperature-controlled supply chain strategies to preserve vaccine and biologic potency from central warehouses to peripheral health posts.",
+            category: "Supply Chain"
+        },
+        {
+            title: "Understanding Drug Stability and Excipient Selection",
+            date: "April 28, 2026",
+            snippet: "A technical breakdown of how formulation excipients impact active pharmaceutical ingredient (API) shelf-life and degradation pathways under varying climatic conditions.",
+            category: "Pharmaceutical Formulation"
+        },
+        {
+            title: "Streamlining Consumption Tracking Across 97 Health Facilities",
+            date: "March 10, 2026",
+            snippet: "Best practices for utilizing standardized Excel and database templates to minimize stockouts and overstocking across provincial medical inventories.",
+            category: "Data Management"
+        }
+    ];
+
+    blogGrid.innerHTML = blogPosts.map(post => `
+        <article class="blog-card">
+            <span class="blog-category">${post.category}</span>
+            <h3>${post.title}</h3>
+            <span class="blog-date">${post.date}</span>
+            <p>${post.snippet}</p>
+            <button class="read-more-btn" onclick="alert('Full article viewing can be linked to a detailed post page or modal.')">Read More</button>
+        </article>
+    `).join('');
+}
+
+/**
+ * Initializes a live real-time clock and date display
+ */
+function initClock() {
+    const clockElement = document.getElementById('live-clock');
+    const dateElement = document.getElementById('live-date');
+
+    function updateTime() {
+        const now = new Date();
+        
+        // Time format
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        if (clockElement) clockElement.textContent = `${hours}:${minutes}:${seconds}`;
+
+        // Date format
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        if (dateElement) dateElement.textContent = now.toLocaleDateString(undefined, options);
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+}
+
+/**
+ * Handles BMI Calculation logic and evaluation category
+ */
+function initBmiCalculator() {
+    const form = document.getElementById('bmi-form');
+    const resultDiv = document.getElementById('bmi-result');
+
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const weight = parseFloat(document.getElementById('bmi-weight').value);
+            const heightCm = parseFloat(document.getElementById('bmi-height').value);
+
+            if (!weight || !heightCm || weight <= 0 || heightCm <= 0) {
+                resultDiv.textContent = "Please enter valid positive values for weight and height.";
+                resultDiv.className = "bmi-result error";
+                return;
+            }
+
+            const heightM = heightCm / 100;
+            const bmi = (weight / (heightM * heightM)).toFixed(1);
+
+            let category = "";
+            let colorClass = "";
+
+            if (bmi < 18.5) {
+                category = "Underweight";
+                colorClass = "warning";
+            } else if (bmi >= 18.5 && bmi < 25) {
+                category = "Normal weight";
+                colorClass = "success";
+            } else if (bmi >= 25 && bmi < 30) {
+                category = "Overweight";
+                colorClass = "warning";
+            } else {
+                category = "Obese";
+                colorClass = "danger";
+            }
+
+            resultDiv.innerHTML = `Your BMI: <strong>${bmi}</strong> (${category})`;
+            resultDiv.className = `bmi-result ${colorClass}`;
+        });
+    }
+}
+
+/**
+ * Injects clean, modern CSS styling for the portfolio components into the document head
+ */
+function injectStyles() {
+    const styleTag = document.createElement('style');
+    styleTag.textContent = `
+        :root {
+            --primary-color: #0d6efd;
+            --primary-dark: #0b5ed7;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-main: #212529;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --radius: 10px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .portfolio-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .portfolio-header {
+            background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+            color: white;
+            padding: 40px 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .portfolio-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            margin-bottom: 25px;
+        }
+
+        .portfolio-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card, .utility-card, .blog-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+        }
+
+        .skills-grid {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .skill-tag {
+            background: #e7f1ff;
+            color: var(--primary-color);
+            padding: 6px 14px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .section-desc {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 0;
+        }
+
+        .blog-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .blog-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 1.2rem;
+        }
+
+        .blog-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            padding: 0;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .read-more-btn:hover {
+            text-decoration: underline;
+        }
+
+        .utilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .clock-display {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 15px 0 5px 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .date-display {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+
+        .bmi-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .bmi-form label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .bmi-form input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .bmi-result {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.95ngrem;
+        }
+
+        .bmi-result.hidden {
+            display: none;
+        }
+
+        .bmi-result.success { background: #d1e7dd; color: #0f5132; }
+        .bmi-result.warning { background: #fff3cd; color: #664d03; }
+        .bmi-result.danger { background: #f8d7da; color: #842029; }
+        .bmi-result.error { background: #f8d7da; color: #842029; }
+
+        .portfolio-footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+    `;
+    document.head.appendChild(styleTag);
+}
