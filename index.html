@@ -407,8 +407,28 @@
                     <h3>${post.title}</h3>
                     <span class="blog-date">${post.date}</span>
                     <p>${post.snippet}</p>
-                    <button class="read-more-btn" onclick="<a href="blog.html">Visit Blog Page</a>">Read More</button>
-                </article>
+                    <button class="read-more-btn" onclick="toggleReadMore('post-1-details', this)">Read More</button>
+    </article>
+
+    <script>
+        function toggleReadMore(contentId, buttonElement) {
+            const content = document.getElementById(contentId);
+            
+            // Toggle the 'show' class on the hidden content container
+            content.classList.toggle('show');
+
+            // Change button text dynamically
+            if (content.classList.contains('show')) {
+                buttonElement.textContent = "Read Less";
+            } else {
+                buttonElement.textContent = "Read More";
+            }
+        }
+    </script>
+
+</body>
+</html>
+            
             `).join('');
         }
 
