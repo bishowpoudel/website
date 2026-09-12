@@ -179,7 +179,50 @@
           opacity: 1;
           transition: max-height 0.4s ease-in, opacity 0.4s ease-in;
          }
-           
+           .collaborate-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.collaborate-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-main);
+    transition: var(--transition);
+}
+
+.collaborate-item:hover {
+    background: #e7f1ff;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.08);
+}
+
+.collaborate-item .icon {
+    font-size: 1.5rem;
+}
+
+.collaborate-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.collaborate-item strong {
+    font-size: 0.95rem;
+}
+
+.collaborate-item span:not(.icon) {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
 
         .utilities-grid {
             display: grid;
@@ -311,6 +354,58 @@
                         <!-- Blog posts dynamically loaded via script -->
                     </div>
                 </section>
+                <!-- Collaborate Section -->
+                <section id="collaborate-section" class="content-section">
+                     <div class="card">
+                     <h2>Let's Collaborate</h2>
+                     <p class="section-desc">Connect with me for professional inquiries, public health supply chain discussions, or development projects.</p>
+        
+                     <div class="collaborate-grid">
+                     <a href="mailto:bishow.poudel@example.com" class="collaborate-item">
+                     <span class="icon">✉️</span>
+                     <div>
+                     <strong>Email</strong>
+                     <span>bishow.poudel@example.com</span>
+                     </div>
+                     </a>
+                     <a href="https://linkedin.com/in/bishow-poudel" target="_blank" class="collaborate-item">
+                     <span class="icon">💼</span>
+                     <div>
+                     <strong>LinkedIn</strong>
+                     <span>Professional Network</span>
+                     </div>
+            </a>
+            <a href="https://github.com/bishow-poudel" target="_blank" class="collaborate-item">
+                <span class="icon">💻</span>
+                <div>
+                    <strong>GitHub</strong>
+                    <span>Code & Repositories</span>
+                </div>
+            </a>
+            <a href="https://facebook.com/bishow.poudel" target="_blank" class="collaborate-item">
+                <span class="icon">👥</span>
+                <div>
+                    <strong>Facebook</strong>
+                    <span>Connect Socially</span>
+                </div>
+            </a>
+            <a href="https://twitter.com/bishow_poudel" target="_blank" class="collaborate-item">
+                <span class="icon">🐦</span>
+                <div>
+                    <strong>Twitter / X</strong>
+                    <span>Updates & Thoughts</span>
+                </div>
+            </a>
+            <a href="https://youtube.com/@bishow_poudel" target="_blank" class="collaborate-item">
+                <span class="icon">▶️</span>
+                <div>
+                    <strong>YouTube</strong>
+                    <span>Media & Videos</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
 
                 <!-- Utilities Section (Clock & BMI Calculator) -->
                 <section id="utilities-section" class="content-section">
