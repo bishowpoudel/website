@@ -35,28 +35,28 @@
         .bars {
             display: flex;
             align-items: flex-end;
-            justify-content: center;
+            justify-content: right;
             gap: 0.5rem;
             height: 4rem;
             margin-bottom: 2rem;
         }
-          .bar {
-  width: 0.5rem;
-  border-radius: 0.25rem;
-  background: linear-gradient(to top, var(--primary), var(--secondary));
-  animation: bounce 1s ease-in-out infinite;
-}
+        .bar {
+           width: 0.5rem;
+           border-radius: 0.25rem;
+           background: linear-gradient(to top, var(--primary), var(--secondary));
+           animation: bounce 1s ease-in-out infinite;
+         }
 
-.bar-1 { height: 40%; animation-delay: 0s; }
-.bar-2 { height: 70%; animation-delay: 0.1s; }
-.bar-3 { height: 100%; animation-delay: 0.2s; }
-.bar-4 { height: 60%; animation-delay: 0.3s; }
-.bar-5 { height: 30%; animation-delay: 0.4s; }
+        .bar-1 { height: 40%; animation-delay: 0s; }
+        .bar-2 { height: 70%; animation-delay: 0.1s; }
+        .bar-3 { height: 100%; animation-delay: 0.2s; }
+        .bar-4 { height: 60%; animation-delay: 0.3s; }
+        .bar-5 { height: 30%; animation-delay: 0.4s; }
 
-@keyframes bounce {
-  0%, 100% { transform: scaleY(1); }
-  50% { transform: scaleY(0.5); }
-}
+        @keyframes bounce {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+           }
         .portfolio-header {
             background: linear-gradient(45deg, #0d6efd, #9f0639);
             color: white;
@@ -342,6 +342,14 @@
                 <div class="header-content">
                     <h1>Bishow Poudel</h1>
                     <p class="subtitle">Supply Chain Pharmacist & Public Health Professional</p>
+                    <!-- Animated Bars -->
+                    <div class="bars">
+                    <div class="bar bar-1"></div>
+                    <div class="bar bar-2"></div>
+                    <div class="bar bar-3"></div>
+                    <div class="bar bar-4"></div>
+                    <div class="bar bar-5"></div>
+                    </div>
                     <nav class="portfolio-nav">
                         <button class="nav-btn active" data-target="about-section">About</button>
                         <button class="nav-btn" data-target="blog-section">Medicine Blog</button>
@@ -370,14 +378,7 @@
                         </div>
                     </div>
                 </section>
-                 <!-- Animated Bars -->
-          <div class="bars">
-            <div class="bar bar-1"></div>
-            <div class="bar bar-2"></div>
-            <div class="bar bar-3"></div>
-            <div class="bar bar-4"></div>
-            <div class="bar bar-5"></div>
-          </div>
+                 
 
                 <!-- Medicine Blog Section -->
                 <section id="blog-section" class="content-section">
